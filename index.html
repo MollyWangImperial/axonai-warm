@@ -92,6 +92,99 @@
     background: #F4EBDF;
   }
   .reach-scene > svg { width: 100%; height: 100%; display: block; }
+
+  /* ===== Step 4 — pose/keypoint detection overlay ===== */
+  .pose-overlay {
+    position: absolute; inset: 0; z-index: 3;
+    pointer-events: none;
+  }
+  .pose-overlay svg { width: 100%; height: 100%; display: block; }
+  .kp-pulse { animation: kpPulse 1.6s ease-in-out infinite; transform-origin: center; transform-box: fill-box; }
+  @keyframes kpPulse {
+    0%,100% { r: 7; opacity: 1; }
+    50%     { r: 11; opacity: .55; }
+  }
+  /* Form-match score chip (bottom-right) */
+  .match-chip {
+    position: absolute; bottom: 18px; right: 18px; z-index: 4;
+    background: rgba(255,255,255,.96); color: var(--slate);
+    padding: 10px 16px; border-radius: 16px;
+    font-size: 13px; font-weight: 600;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 10px 24px -12px rgba(0,0,0,.45);
+    display: flex; align-items: center; gap: 12px;
+  }
+  .match-chip .mc-label { font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--slate-soft); display: block; font-weight: 700; }
+  .match-chip .mc-val   { font-family: "Fraunces", serif; font-size: 22px; font-weight: 600; color: var(--teal-deep); line-height: 1; }
+  .match-chip .mc-check {
+    width: 28px; height: 28px; border-radius: 999px;
+    background: var(--teal); color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 700;
+  }
+  /* Coaching hint callout */
+  .coach-hint {
+    position: absolute; top: 22px; left: 22px; z-index: 4;
+    max-width: 240px;
+    background: rgba(20,23,23,.86); color: #fff;
+    padding: 11px 14px; border-radius: 14px;
+    font-size: 13px; line-height: 1.35;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 10px 24px -12px rgba(0,0,0,.5);
+    display: flex; align-items: flex-start; gap: 10px;
+  }
+  .coach-hint .ch-arrow {
+    width: 26px; height: 26px; flex: 0 0 26px;
+    border-radius: 999px; background: var(--coral); color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700;
+  }
+  .coach-hint .ch-body strong { color: var(--peach); font-weight: 700; display: block; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 2px; }
+  /* Keypoint tooltip showing measured angle */
+  .kp-tag {
+    position: absolute; z-index: 5;
+    background: #fff; color: var(--teal-deep);
+    padding: 4px 10px; border-radius: 999px;
+    font-size: 11px; font-weight: 700; letter-spacing: .04em;
+    box-shadow: 0 6px 14px -8px rgba(0,0,0,.4);
+    white-space: nowrap;
+  }
+
+  /* ===== Step 2 — Functional-problems diagnostic card ===== */
+  .diag-card {
+    background: #fff;
+    border: 1px solid rgba(46,58,58,.08);
+    border-radius: 26px;
+    padding: 26px 24px;
+    box-shadow: 0 24px 60px -28px rgba(46,58,58,.5);
+  }
+  .diag-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; margin-bottom: 18px; }
+  .diag-eyebrow { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--teal-deep); font-weight: 700; }
+  .diag-title { font-family: "Fraunces", serif; font-size: 20px; font-weight: 600; color: var(--slate); margin-top: 2px; line-height: 1.2; }
+  .diag-pill { font-size: 11px; color: var(--slate-soft); background: var(--ivory); padding: 5px 10px; border-radius: 999px; font-weight: 600; white-space: nowrap; }
+  .diag-body { display: grid; grid-template-columns: 150px 1fr; gap: 18px; align-items: center; }
+  @media (max-width: 480px) { .diag-body { grid-template-columns: 1fr; } .diag-svg { max-width: 180px; margin: 0 auto; } }
+  .diag-svg { width: 100%; height: auto; max-height: 320px; display: block; }
+  .diag-findings { display: flex; flex-direction: column; gap: 14px; }
+  .finding { display: flex; gap: 10px; align-items: flex-start; }
+  .finding-dot {
+    flex: 0 0 10px; width: 10px; height: 10px; margin-top: 7px;
+    border-radius: 999px; background: var(--coral);
+    box-shadow: 0 0 0 4px rgba(232,146,124,.18);
+  }
+  .finding-name { font-size: 14px; font-weight: 600; color: var(--slate); line-height: 1.2; }
+  .finding-meta { font-size: 12px; color: var(--slate-soft); margin: 3px 0 6px; }
+  .finding-bar { height: 6px; background: rgba(46,58,58,.08); border-radius: 999px; overflow: hidden; }
+  .finding-bar > div { height: 100%; background: linear-gradient(90deg, var(--coral), var(--peach)); border-radius: 999px; }
+  .diag-footer {
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px dashed rgba(46,58,58,.18);
+    font-size: 12px;
+    color: var(--slate-soft);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .diag-footer .badge { background: rgba(31,158,143,.12); color: var(--teal-deep); padding: 3px 9px; border-radius: 999px; font-weight: 700; font-size: 11px; letter-spacing: .04em; }
   /* Camera viewfinder frame */
   .viewfinder { position: relative; border-radius: 28px; overflow: hidden; }
   .vf-corner {
@@ -573,46 +666,124 @@
       </div>
     </div>
 
-    <!-- Step 2 — See progress -->
+    <!-- Step 2 — What we see (functional problems demo) -->
     <div class="reveal grid lg:grid-cols-2 gap-10 lg:gap-16 items-center mb-24 lg:mb-32">
-      <div class="order-2 lg:order-1">
+      <div>
         <div class="flex items-center gap-4 mb-5">
           <span class="step-num">2</span>
-          <p class="label" style="margin:0;">See the wins</p>
+          <p class="label" style="margin:0;">What we see</p>
         </div>
-        <h3 class="text-3xl sm:text-4xl font-semibold leading-tight mb-4">Clear, encouraging metrics — and a reason to smile.</h3>
-        <p class="text-lg" style="color:var(--slate-soft);">AxonAI quietly measures gait speed, balance, range of motion and symmetry — the kinds of changes you can't easily feel day-to-day — and turns them into gentle progress lines you can see. Week by week, the numbers tell a story worth celebrating.</p>
+        <h3 class="text-3xl sm:text-4xl font-semibold leading-tight mb-4">
+          We start by understanding <span class="gradient-text">exactly where you are.</span>
+        </h3>
+        <p class="text-lg" style="color:var(--slate-soft);">
+          Before any plan is built, AxonAI gently maps the specific movements affected by your
+          stroke — comparing each side, each joint, each step against your own baseline. This
+          honest, personal picture is the foundation for everything that follows.
+        </p>
         <ul class="step-list">
-          <li>Mobility, balance and strength scores updated every session</li>
-          <li>Week-over-week trends in plain language — no medical jargon</li>
-          <li>Milestones marked and celebrated as soon as you reach them</li>
-          <li>Share progress with family or your care team in one tap</li>
+          <li>Detects subtle deficits in shoulder, arm, hand, leg, and gait</li>
+          <li>Compares the affected side against your healthy-side baseline</li>
+          <li>Flags compensatory patterns that need gentle correction</li>
+          <li>Updates the picture as you recover — your baseline isn't fixed</li>
         </ul>
       </div>
-      <div class="step-photo order-1 lg:order-2">
-        <img src="https://images.pexels.com/photos/7983622/pexels-photo-7983622.jpeg?auto=compress&cs=tinysrgb&w=1000" alt="A smiling older man, happy and proud of his recovery progress" loading="lazy" decoding="async" />
-        <div class="metrics-card">
-          <h4>Mobility score</h4>
-          <div><span class="score">78</span><span class="delta">&uarr; +14 this week</span></div>
-          <!-- Mini trend chart -->
-          <svg viewBox="0 0 220 56" width="100%" height="56" aria-hidden="true">
-            <defs>
-              <linearGradient id="trendFill" x1="0" x2="0" y1="0" y2="1">
-                <stop offset="0%" stop-color="#1F9E8F" stop-opacity=".35"/>
-                <stop offset="100%" stop-color="#1F9E8F" stop-opacity="0"/>
-              </linearGradient>
-            </defs>
-            <path d="M0,46 L30,42 L60,38 L90,32 L120,28 L150,22 L180,16 L220,8 L220,56 L0,56 Z" fill="url(#trendFill)"/>
-            <path d="M0,46 L30,42 L60,38 L90,32 L120,28 L150,22 L180,16 L220,8" stroke="#1F9E8F" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-            <circle cx="220" cy="8" r="4" fill="#E8927C" stroke="#fff" stroke-width="2"/>
+      <div class="diag-card">
+        <div class="diag-header">
+          <div>
+            <div class="diag-eyebrow">AxonAI &middot; Functional scan</div>
+            <div class="diag-title">What we found this week</div>
+          </div>
+          <div class="diag-pill">Baseline + 3 sessions</div>
+        </div>
+        <div class="diag-body">
+          <svg class="diag-svg" viewBox="0 0 220 360" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+            <!-- Body silhouette -->
+            <g fill="rgba(46,58,58,.10)" stroke="rgba(46,58,58,.30)" stroke-width="1.5" stroke-linejoin="round">
+              <!-- head -->
+              <circle cx="110" cy="40" r="22"/>
+              <!-- neck -->
+              <path d="M100 60 L100 78 L120 78 L120 60 Z"/>
+              <!-- torso + shoulders + arms outline (simplified) -->
+              <path d="M80 80
+                       L60 100 L48 150 L40 195 L46 200 L56 195 L62 150
+                       L74 102 L78 195 L72 230 L80 320 L88 330 L100 332 L108 270 L110 230
+                       L112 270 L120 332 L132 330 L140 320 L148 230 L142 195 L146 102
+                       L158 150 L164 195 L174 200 L180 195 L172 150 L160 100 L140 80 Z"/>
+            </g>
+
+            <!-- Hotspot: left shoulder (affected) — appears on right of figure (patient's left) -->
+            <g>
+              <circle cx="78" cy="100" r="10" fill="rgba(232,146,124,.20)" stroke="#E8927C" stroke-width="2"/>
+              <circle cx="78" cy="100" r="5" fill="#E8927C">
+                <animate attributeName="r" values="5;8;5" dur="1.8s" repeatCount="indefinite"/>
+              </circle>
+              <line x1="78" y1="100" x2="32" y2="78" stroke="#E8927C" stroke-width="1.5" stroke-dasharray="3 3"/>
+            </g>
+
+            <!-- Hotspot: left wrist -->
+            <g>
+              <circle cx="48" cy="195" r="9" fill="rgba(232,146,124,.20)" stroke="#E8927C" stroke-width="2"/>
+              <circle cx="48" cy="195" r="4.5" fill="#E8927C">
+                <animate attributeName="r" values="4.5;7.5;4.5" dur="2s" repeatCount="indefinite"/>
+              </circle>
+            </g>
+
+            <!-- Hotspot: left leg / gait -->
+            <g>
+              <circle cx="92" cy="295" r="9" fill="rgba(232,146,124,.20)" stroke="#E8927C" stroke-width="2"/>
+              <circle cx="92" cy="295" r="4.5" fill="#E8927C">
+                <animate attributeName="r" values="4.5;7;4.5" dur="2.2s" repeatCount="indefinite"/>
+              </circle>
+            </g>
+
+            <!-- Healthy-side checkmarks (right of figure = patient's right) -->
+            <g>
+              <circle cx="142" cy="100" r="7" fill="rgba(31,158,143,.18)" stroke="#1F9E8F" stroke-width="1.5"/>
+              <path d="M139 100 L141 102 L145 98" stroke="#1F9E8F" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+              <circle cx="172" cy="195" r="7" fill="rgba(31,158,143,.18)" stroke="#1F9E8F" stroke-width="1.5"/>
+              <path d="M169 195 L171 197 L175 193" stroke="#1F9E8F" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+              <circle cx="128" cy="295" r="7" fill="rgba(31,158,143,.18)" stroke="#1F9E8F" stroke-width="1.5"/>
+              <path d="M125 295 L127 297 L131 293" stroke="#1F9E8F" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+            </g>
           </svg>
-          <div class="metrics-row"><span>Balance <strong>+8%</strong></span><span>Gait <strong>+12%</strong></span></div>
+
+          <div class="diag-findings">
+            <div class="finding">
+              <span class="finding-dot"></span>
+              <div>
+                <div class="finding-name">Left shoulder flexion</div>
+                <div class="finding-meta">Limited to 95&deg; &middot; range goal 160&deg;</div>
+                <div class="finding-bar"><div style="width:42%;"></div></div>
+              </div>
+            </div>
+            <div class="finding">
+              <span class="finding-dot"></span>
+              <div>
+                <div class="finding-name">Left-hand grip strength</div>
+                <div class="finding-meta">60% of your healthy side</div>
+                <div class="finding-bar"><div style="width:60%;"></div></div>
+              </div>
+            </div>
+            <div class="finding">
+              <span class="finding-dot"></span>
+              <div>
+                <div class="finding-name">Gait symmetry</div>
+                <div class="finding-meta">Left step 8&nbsp;cm shorter &middot; mild compensation</div>
+                <div class="finding-bar"><div style="width:75%;"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="diag-footer">
+          <span class="badge">3 to work on</span>
+          <span>These shape the gentle plan in Step 3.</span>
         </div>
       </div>
     </div>
 
     <!-- Step 3 — Personalized rehab plan -->
-    <div class="reveal grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+    <div class="reveal grid lg:grid-cols-2 gap-10 lg:gap-16 items-center mb-24 lg:mb-32">
       <div class="phone-wrap">
         <div class="phone-frame" role="img" aria-label="Phone screen showing a personalised daily rehab plan with three exercises">
           <div class="phone-screen">
@@ -666,6 +837,148 @@
           <li>Video demonstrations and audio cues for every exercise</li>
           <li>Stays in sync with your clinician, when one is involved</li>
         </ul>
+      </div>
+    </div>
+
+    <!-- Step 4 — See your progress -->
+    <div class="reveal grid lg:grid-cols-2 gap-10 lg:gap-16 items-center mb-24 lg:mb-32">
+      <div class="order-2 lg:order-1">
+        <div class="flex items-center gap-4 mb-5">
+          <span class="step-num">4</span>
+          <p class="label" style="margin:0;">See the wins</p>
+        </div>
+        <h3 class="text-3xl sm:text-4xl font-semibold leading-tight mb-4">Clear, encouraging metrics — and a reason to smile.</h3>
+        <p class="text-lg" style="color:var(--slate-soft);">AxonAI quietly measures gait speed, balance, range of motion and symmetry — the kinds of changes you can't easily feel day-to-day — and turns them into gentle progress lines you can see. Week by week, the numbers tell a story worth celebrating.</p>
+        <ul class="step-list">
+          <li>Mobility, balance and strength scores updated every session</li>
+          <li>Week-over-week trends in plain language — no medical jargon</li>
+          <li>Milestones marked and celebrated as soon as you reach them</li>
+          <li>Share progress with family or your care team in one tap</li>
+        </ul>
+      </div>
+      <div class="step-photo order-1 lg:order-2">
+        <img src="https://images.pexels.com/photos/7983622/pexels-photo-7983622.jpeg?auto=compress&cs=tinysrgb&w=1000" alt="A smiling older man, happy and proud of his recovery progress" loading="lazy" decoding="async" />
+        <div class="metrics-card">
+          <h4>Mobility score</h4>
+          <div><span class="score">78</span><span class="delta">&uarr; +14 this week</span></div>
+          <svg viewBox="0 0 220 56" width="100%" height="56" aria-hidden="true">
+            <defs>
+              <linearGradient id="trendFill" x1="0" x2="0" y1="0" y2="1">
+                <stop offset="0%" stop-color="#1F9E8F" stop-opacity=".35"/>
+                <stop offset="100%" stop-color="#1F9E8F" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            <path d="M0,46 L30,42 L60,38 L90,32 L120,28 L150,22 L180,16 L220,8 L220,56 L0,56 Z" fill="url(#trendFill)"/>
+            <path d="M0,46 L30,42 L60,38 L90,32 L120,28 L150,22 L180,16 L220,8" stroke="#1F9E8F" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="220" cy="8" r="4" fill="#E8927C" stroke="#fff" stroke-width="2"/>
+          </svg>
+          <div class="metrics-row"><span>Balance <strong>+8%</strong></span><span>Gait <strong>+12%</strong></span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 5 — Real-time form coaching with pose detection -->
+    <div class="reveal grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+      <div class="order-2 lg:order-1">
+        <div class="flex items-center gap-4 mb-5">
+          <span class="step-num">5</span>
+          <p class="label" style="margin:0;">Real-time guidance</p>
+        </div>
+        <h3 class="text-3xl sm:text-4xl font-semibold leading-tight mb-4">
+          Form coaching, the <span class="gradient-text">moment you need it.</span>
+        </h3>
+        <p class="text-lg" style="color:var(--slate-soft);">
+          As you move, AxonAI tracks your joints in real time and quietly checks every rep
+          against your target form. A live match score and gentle on-screen hints tell you
+          exactly how to adjust — so every minute of practice is the right kind of practice.
+        </p>
+        <ul class="step-list">
+          <li>Live skeleton tracking — 17 body landmarks at 30 frames per second</li>
+          <li>Form-match score updates with every rep, so progress is visible</li>
+          <li>Specific, encouraging hints — never generic, never scolding</li>
+          <li>Caregiver alerts if a movement looks unsafe or compensatory</li>
+        </ul>
+      </div>
+      <div class="step-photo viewfinder order-1 lg:order-2">
+        <img src="https://images.pexels.com/photos/8899507/pexels-photo-8899507.jpeg?auto=compress&cs=tinysrgb&w=1400"
+             alt="An older patient performing an arm-raise exercise while AxonAI tracks his body keypoints and shows a real-time form-match score."
+             loading="lazy" decoding="async" />
+
+        <!-- Pose keypoint SVG overlay -->
+        <div class="pose-overlay" aria-hidden="true">
+          <svg viewBox="0 0 800 500" preserveAspectRatio="xMidYMid slice">
+            <!-- Skeleton bones -->
+            <g stroke="rgba(31,158,143,.65)" stroke-width="3" fill="none" stroke-linecap="round">
+              <line x1="400" y1="105" x2="400" y2="180"/>
+              <line x1="320" y1="180" x2="480" y2="180"/>
+              <line x1="320" y1="180" x2="200" y2="200"/>
+              <line x1="200" y1="200" x2="80"  y2="218"/>
+              <line x1="480" y1="180" x2="600" y2="200"/>
+              <line x1="600" y1="200" x2="720" y2="215"/>
+              <line x1="400" y1="180" x2="400" y2="340"/>
+              <line x1="360" y1="340" x2="440" y2="340"/>
+              <line x1="360" y1="340" x2="360" y2="460"/>
+              <line x1="440" y1="340" x2="440" y2="460"/>
+            </g>
+            <!-- Keypoints (correct = teal, drift = peach) -->
+            <g>
+              <circle cx="400" cy="105" r="7" fill="#1F9E8F" stroke="#fff" stroke-width="2.5"/>
+              <circle cx="400" cy="180" r="7" fill="#1F9E8F" stroke="#fff" stroke-width="2.5"/>
+              <circle cx="320" cy="180" r="7" fill="#1F9E8F" stroke="#fff" stroke-width="2.5"/>
+              <circle cx="480" cy="180" r="7" fill="#1F9E8F" stroke="#fff" stroke-width="2.5"/>
+              <circle cx="200" cy="200" r="7" fill="#1F9E8F" stroke="#fff" stroke-width="2.5"/>
+              <circle cx="600" cy="200" r="7" fill="#1F9E8F" stroke="#fff" stroke-width="2.5"/>
+              <circle cx="720" cy="215" r="7" fill="#1F9E8F" stroke="#fff" stroke-width="2.5"/>
+              <circle cx="360" cy="340" r="7" fill="#1F9E8F" stroke="#fff" stroke-width="2.5"/>
+              <circle cx="440" cy="340" r="7" fill="#1F9E8F" stroke="#fff" stroke-width="2.5"/>
+              <!-- Left wrist — slight drift, pulsing peach -->
+              <circle cx="80" cy="218" r="9" fill="#E8927C" stroke="#fff" stroke-width="2.5">
+                <animate attributeName="r" values="9;13;9" dur="1.6s" repeatCount="indefinite"/>
+                <animate attributeName="opacity" values="1;.55;1" dur="1.6s" repeatCount="indefinite"/>
+              </circle>
+            </g>
+            <!-- Adjustment arc + arrow near the drifting wrist -->
+            <path d="M 55 200 Q 38 180 70 162" stroke="#E8927C" stroke-width="2.5" fill="none"
+                  stroke-linecap="round" stroke-dasharray="6 4"/>
+            <polygon points="62,156 76,162 64,172" fill="#E8927C"/>
+            <!-- Small angle label near the right shoulder -->
+            <g font-family="Plus Jakarta Sans, system-ui, sans-serif" font-size="11" font-weight="700">
+              <rect x="495" y="148" width="58" height="20" rx="10" fill="#fff" stroke="rgba(31,158,143,.4)" stroke-width="1"/>
+              <text x="524" y="162" text-anchor="middle" fill="#14776B">88&deg;</text>
+            </g>
+            <g font-family="Plus Jakarta Sans, system-ui, sans-serif" font-size="11" font-weight="700">
+              <rect x="247" y="148" width="58" height="20" rx="10" fill="#fff" stroke="rgba(232,146,124,.5)" stroke-width="1"/>
+              <text x="276" y="162" text-anchor="middle" fill="#B45842">82&deg;</text>
+            </g>
+          </svg>
+        </div>
+
+        <!-- Viewfinder corners -->
+        <div class="vf-corner tl"></div>
+        <div class="vf-corner tr"></div>
+        <div class="vf-corner bl"></div>
+        <div class="vf-corner br"></div>
+
+        <!-- AxonAI live-tracking chip -->
+        <div class="capture-chip"><span class="dot"></span>AxonAI &middot; Live tracking</div>
+
+        <!-- Coaching hint (top-left) -->
+        <div class="coach-hint">
+          <span class="ch-arrow">&uarr;</span>
+          <span class="ch-body">
+            <strong>Form tip</strong>
+            Raise your left arm a touch higher — match the right side.
+          </span>
+        </div>
+
+        <!-- Form-match score (bottom-right) -->
+        <div class="match-chip">
+          <div>
+            <span class="mc-label">Form match</span>
+            <span class="mc-val">94%</span>
+          </div>
+          <span class="mc-check">&#10003;</span>
+        </div>
       </div>
     </div>
   </div>
