@@ -1009,7 +1009,7 @@
       sub: "Six months post-stroke",
       photo: "https://images.pexels.com/photos/8088897/pexels-photo-8088897.jpeg?auto=compress&cs=tinysrgb&w=1400",
       voiceHint: "male",
-      rate: 0.92, pitch: 0.92,
+      rate: 0.88, pitch: 0.90,
       lines: [
         "Every day, I do the same exercises.",
         "I stretch. I try to walk a little further.",
@@ -1024,7 +1024,7 @@
       sub: "Nine months post-stroke",
       photo: "https://images.pexels.com/photos/17044848/pexels-photo-17044848.jpeg?auto=compress&cs=tinysrgb&w=1400",
       voiceHint: "female",
-      rate: 0.92, pitch: 1.04,
+      rate: 0.88, pitch: 1.02,
       lines: [
         "After the physio sessions ended, the whole routine just… fell apart.",
         "There's no one telling me what to do anymore.",
@@ -1073,18 +1073,47 @@
     }, 10000);
   }
 
-  // Pick the best available voice for a hint (male/female), preferring English.
+  // Pick the warmest, most natural-sounding voice available for the gender hint.
+  // Prefers MS Natural / Google neural voices; skips known robotic legacy voices.
   function pickVoice(hint) {
     const voices = synth.getVoices() || [];
     if (!voices.length) return null;
-    const en = voices.filter(v => /^en/i.test(v.lang));
-    const pool = en.length ? en : voices;
-    // Heuristic: voice name keywords for gender.
-    const maleHints   = ['daniel','alex','fred','tom','aaron','arthur','oliver','george','male'];
-    const femaleHints = ['samantha','victoria','karen','susan','tessa','moira','fiona','allison','ava','serena','female'];
-    const list = hint === 'male' ? maleHints : femaleHints;
-    const match = pool.find(v => list.some(k => v.name.toLowerCase().includes(k)));
-    return match || pool[0];
+    let pool = voices.filter(v => /^en/i.test(v.lang));
+    if (!pool.length) pool = voices.slice();
+    // Cloud/remote voices first — usually richer than offline ones.
+    pool = pool.sort((a, b) => (a.localService === true ? 1 : 0) - (b.localService === true ? 1 : 0));
+
+    // Drop known robotic legacy voices entirely.
+    const avoid = ['microsoft mark','microsoft david','microsoft zira','espeak','pico','vocalizer'];
+    const cleanPool = pool.filter(v => !avoid.some(bad => v.name.toLowerCase().includes(bad)));
+    const search = cleanPool.length ? cleanPool : pool;
+
+    // Tier 1 — modern neural / natural voices (MS Natural, Google neural). These are warm and human.
+    const tier1Male = ['guy','andrew','brian','christopher','davis','eric','jacob','roger','ryan','steffan','tony','jason','liam','dustin'];
+    const tier1Female = ['aria','jenny','sara','nancy','jane','ana','michelle','emma','ava','monica','clara','sonia','michelle'];
+
+    // Tier 2 — older but acceptable system voices (macOS classics).
+    const tier2Male = ['daniel','alex','fred','tom','oliver','george','mark','male'];
+    const tier2Female = ['samantha','victoria','karen','susan','tessa','moira','fiona','allison','serena','female'];
+
+    const tier1 = hint === 'male' ? tier1Male : tier1Female;
+    const tier2 = hint === 'male' ? tier2Male : tier2Female;
+
+    // Inside Tier 1, prefer a voice whose name ALSO contains "Natural" or "Neural".
+    for (const name of tier1) {
+      const premium = search.find(v => {
+        const n = v.name.toLowerCase();
+        return n.includes(name) && /natural|neural/.test(n);
+      });
+      if (premium) return premium;
+    }
+    for (const list of [tier1, tier2]) {
+      for (const name of list) {
+        const match = search.find(v => v.name.toLowerCase().includes(name));
+        if (match) return match;
+      }
+    }
+    return search[0] || pool[0];
   }
 
   // Some browsers load voices asynchronously.
