@@ -82,6 +82,16 @@
     background: #1a1d20;
     display: block;
   }
+  /* Cup-reach SVG scene container */
+  .reach-scene {
+    border-radius: 28px;
+    overflow: hidden;
+    aspect-ratio: 8 / 5;
+    max-height: 520px;
+    box-shadow: 0 24px 60px -28px rgba(46,58,58,.6);
+    background: #F4EBDF;
+  }
+  .reach-scene > svg { width: 100%; height: 100%; display: block; }
   /* Camera viewfinder frame */
   .viewfinder { position: relative; border-radius: 28px; overflow: hidden; }
   .vf-corner {
@@ -528,23 +538,117 @@
 
     <!-- Step 1 — Family records movement -->
     <div class="reveal grid lg:grid-cols-2 gap-10 lg:gap-16 items-center mb-24 lg:mb-32">
-      <div class="step-photo viewfinder">
-        <img src="https://images.pexels.com/photos/8899507/pexels-photo-8899507.jpeg?auto=compress&cs=tinysrgb&w=1400"
-             alt="An older patient seated at home, slowly raising his arm forward in a gentle rehabilitation exercise"
-             loading="lazy" decoding="async" />
+      <div class="step-photo viewfinder reach-scene" role="img" aria-label="Camera view of a seated patient on a table-top reaching task: a cup moves from a start marker to a target crosshair while AxonAI tracks the motion.">
+        <svg viewBox="0 0 800 500" preserveAspectRatio="xMidYMid slice" width="100%" height="100%" style="display:block; background:#F4EBDF;">
+          <defs>
+            <linearGradient id="wallGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#F4EBDF"/>
+              <stop offset="1" stop-color="#E8D8C2"/>
+            </linearGradient>
+            <linearGradient id="tableGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#C99A6F"/>
+              <stop offset="0.55" stop-color="#A87850"/>
+              <stop offset="1" stop-color="#7E5836"/>
+            </linearGradient>
+            <linearGradient id="cupBody" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#ffffff"/>
+              <stop offset="1" stop-color="#E5DDD2"/>
+            </linearGradient>
+            <radialGradient id="vignette" cx="0.5" cy="0.45" r="0.75">
+              <stop offset="0.6" stop-color="rgba(0,0,0,0)"/>
+              <stop offset="1" stop-color="rgba(0,0,0,0.30)"/>
+            </radialGradient>
+            <!-- Reach trajectory path (referenced by animateMotion) -->
+            <path id="reachPath" d="M180,360 Q400,150 620,210"/>
+          </defs>
+
+          <!-- Wall (back of room) -->
+          <rect width="800" height="230" fill="url(#wallGrad)"/>
+
+          <!-- Soft picture frame on the wall, for warmth -->
+          <rect x="540" y="55" width="160" height="110" rx="6" fill="#FBF7F2" stroke="rgba(46,58,58,.18)" stroke-width="2"/>
+          <rect x="556" y="71" width="128" height="78" rx="2" fill="#F6C9A8" opacity="0.55"/>
+
+          <!-- Window light on left -->
+          <rect x="60" y="40" width="120" height="160" rx="6" fill="#FFFDFA" stroke="rgba(46,58,58,.18)" stroke-width="2"/>
+          <line x1="120" y1="40" x2="120" y2="200" stroke="rgba(46,58,58,.18)" stroke-width="1.5"/>
+          <line x1="60" y1="120" x2="180" y2="120" stroke="rgba(46,58,58,.18)" stroke-width="1.5"/>
+
+          <!-- Table top -->
+          <path d="M0,230 L800,230 L800,500 L0,500 Z" fill="url(#tableGrad)"/>
+          <!-- Wood grain lines -->
+          <line x1="0" y1="278" x2="800" y2="280" stroke="rgba(255,255,255,.12)" stroke-width="1"/>
+          <line x1="0" y1="332" x2="800" y2="334" stroke="rgba(0,0,0,.10)" stroke-width="1"/>
+          <line x1="0" y1="396" x2="800" y2="398" stroke="rgba(255,255,255,.10)" stroke-width="1"/>
+          <line x1="0" y1="450" x2="800" y2="452" stroke="rgba(0,0,0,.12)" stroke-width="1"/>
+
+          <!-- Patient's arm silhouette reaching in from bottom-left edge -->
+          <path d="M-40,520 Q40,470 100,440 Q150,415 195,378"
+                stroke="rgba(46,58,58,.55)" stroke-width="46" stroke-linecap="round" fill="none"/>
+          <!-- Sleeve cuff -->
+          <ellipse cx="92" cy="442" rx="28" ry="10" fill="rgba(46,58,58,.65)"/>
+
+          <!-- Dashed trajectory line (the planned reach) -->
+          <path d="M180,360 Q400,150 620,210"
+                stroke="rgba(31,158,143,.55)" stroke-width="3" stroke-dasharray="10 8" fill="none"/>
+
+          <!-- START marker -->
+          <circle cx="180" cy="360" r="26" fill="rgba(232,146,124,.18)" stroke="#E8927C" stroke-width="2.5"/>
+          <circle cx="180" cy="360" r="7" fill="#E8927C"/>
+          <rect x="138" y="298" width="84" height="22" rx="11" fill="#fff" stroke="rgba(232,146,124,.5)" stroke-width="1.5"/>
+          <text x="180" y="313" text-anchor="middle" font-family="Plus Jakarta Sans, system-ui, sans-serif"
+                font-size="11" font-weight="700" fill="#B45842" letter-spacing="1.4">START</text>
+
+          <!-- TARGET marker (crosshair) -->
+          <circle cx="620" cy="210" r="40" fill="rgba(31,158,143,.10)" stroke="#1F9E8F" stroke-width="2.5"/>
+          <circle cx="620" cy="210" r="24" fill="none" stroke="#1F9E8F" stroke-width="2"/>
+          <circle cx="620" cy="210" r="9" fill="#1F9E8F"/>
+          <line x1="620" y1="160" x2="620" y2="178" stroke="#1F9E8F" stroke-width="2.5"/>
+          <line x1="620" y1="242" x2="620" y2="260" stroke="#1F9E8F" stroke-width="2.5"/>
+          <line x1="570" y1="210" x2="588" y2="210" stroke="#1F9E8F" stroke-width="2.5"/>
+          <line x1="652" y1="210" x2="670" y2="210" stroke="#1F9E8F" stroke-width="2.5"/>
+          <rect x="582" y="138" width="76" height="22" rx="11" fill="#fff" stroke="rgba(31,158,143,.5)" stroke-width="1.5"/>
+          <text x="620" y="153" text-anchor="middle" font-family="Plus Jakarta Sans, system-ui, sans-serif"
+                font-size="11" font-weight="700" fill="#14776B" letter-spacing="1.4">TARGET</text>
+
+          <!-- Animated cup moving along the trajectory -->
+          <g>
+            <!-- Cup drop shadow -->
+            <ellipse cx="0" cy="32" rx="22" ry="5" fill="rgba(0,0,0,.30)"/>
+            <!-- Cup body -->
+            <path d="M-20,-22 Q-22,-26 -17,-26 L17,-26 Q22,-26 20,-22 L18,26 Q18,32 12,32 L-12,32 Q-18,32 -18,26 Z"
+                  fill="url(#cupBody)" stroke="#14776B" stroke-width="2"/>
+            <!-- Coffee/tea surface -->
+            <ellipse cx="0" cy="-22" rx="18" ry="5" fill="#5b3a1f"/>
+            <ellipse cx="-4" cy="-23" rx="6" ry="2" fill="rgba(255,255,255,.35)"/>
+            <!-- Handle -->
+            <path d="M20,-10 Q36,-8 34,8 Q32,18 20,16" fill="none" stroke="#14776B" stroke-width="2.5" stroke-linecap="round"/>
+            <!-- Steam (3 wavy lines) -->
+            <path d="M-8,-36 Q-6,-44 -10,-50" fill="none" stroke="rgba(255,255,255,.6)" stroke-width="1.8" stroke-linecap="round"/>
+            <path d="M0,-38 Q2,-46 -2,-54" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="1.8" stroke-linecap="round"/>
+            <path d="M8,-36 Q10,-44 6,-50" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="1.8" stroke-linecap="round"/>
+            <animateMotion dur="4.5s" repeatCount="indefinite" calcMode="spline" keyTimes="0;0.45;0.55;1" keySplines="0.4 0 0.2 1;0 0 1 1;0.4 0 0.2 1">
+              <mpath href="#reachPath"/>
+            </animateMotion>
+          </g>
+
+          <!-- Soft camera vignette -->
+          <rect width="800" height="500" fill="url(#vignette)" pointer-events="none"/>
+        </svg>
+
         <div class="vf-corner tl"></div>
         <div class="vf-corner tr"></div>
         <div class="vf-corner bl"></div>
         <div class="vf-corner br"></div>
         <div class="vf-scan"></div>
         <div class="capture-chip"><span class="dot"></span>AxonAI &middot; Tracking</div>
-        <div class="rec-overlay"><span class="rec-dot"></span>REC &middot; Session 12 &middot; 0:34</div>
+        <div class="rec-overlay"><span class="rec-dot"></span>REC &middot; Cup reach &middot; 0:18</div>
         <div class="rom-chip">
           <div>
-            <span class="rom-label">Right shoulder</span>
-            <span class="rom-val">142&deg;</span>
+            <span class="rom-label">Reach accuracy</span>
+            <span class="rom-val">96%</span>
           </div>
-          <span class="rom-up">&uarr; 6&deg;</span>
+          <span class="rom-up">&uarr; 8%</span>
         </div>
       </div>
       <div>
