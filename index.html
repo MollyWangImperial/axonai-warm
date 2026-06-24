@@ -70,9 +70,375 @@
   .label { font-family: "Plus Jakarta Sans", sans-serif; letter-spacing: .12em; text-transform: uppercase; font-size: 12px; font-weight: 700; color: var(--teal-deep); }
   .reveal { opacity: 0; transform: translateY(22px); transition: opacity .8s ease, transform .8s ease; }
   .reveal.in { opacity: 1; transform: none; }
+
+  /* ===== How-it-works step rows ===== */
+  .step-photo { position: relative; }
+  .step-photo > img,
+  .step-photo > video {
+    width: 100%; height: 100%; object-fit: cover;
+    border-radius: 28px;
+    box-shadow: 0 24px 60px -28px rgba(46,58,58,.6);
+    max-height: 520px;
+    background: #1a1d20;
+    display: block;
+  }
+  /* Camera viewfinder frame */
+  .viewfinder { position: relative; border-radius: 28px; overflow: hidden; }
+  .vf-corner {
+    position: absolute; width: 30px; height: 30px;
+    border-color: rgba(255,255,255,.9);
+    border-style: solid;
+    z-index: 3;
+    filter: drop-shadow(0 1px 3px rgba(0,0,0,.55));
+    pointer-events: none;
+  }
+  .vf-corner.tl { top: 18px; left: 18px;     border-width: 3px 0 0 3px; border-top-left-radius: 6px; }
+  .vf-corner.tr { top: 18px; right: 18px;    border-width: 3px 3px 0 0; border-top-right-radius: 6px; }
+  .vf-corner.bl { bottom: 18px; left: 18px;  border-width: 0 0 3px 3px; border-bottom-left-radius: 6px; }
+  .vf-corner.br { bottom: 18px; right: 18px; border-width: 0 3px 3px 0; border-bottom-right-radius: 6px; }
+  /* Subtle scan-line sweep to suggest AI capture */
+  .vf-scan {
+    position: absolute; inset: 18px;
+    border-radius: 8px; overflow: hidden;
+    z-index: 2; pointer-events: none;
+  }
+  .vf-scan::after {
+    content: ""; position: absolute; left: 0; right: 0; height: 80px;
+    background: linear-gradient(180deg, rgba(31,158,143,0), rgba(31,158,143,.18), rgba(31,158,143,0));
+    animation: scan 4s ease-in-out infinite;
+  }
+  @keyframes scan {
+    0%   { top: -80px; }
+    100% { top: 100%; }
+  }
+  /* Range-of-motion readout chip */
+  .rom-chip {
+    position: absolute; bottom: 18px; right: 18px; z-index: 4;
+    background: rgba(255,255,255,.94);
+    color: var(--slate);
+    padding: 9px 14px; border-radius: 14px;
+    font-size: 12px; font-weight: 600;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 10px 24px -12px rgba(0,0,0,.45);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .rom-chip .rom-label { font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--slate-soft); display: block; font-weight: 700; }
+  .rom-chip .rom-val   { font-family: "Fraunces", serif; font-size: 18px; font-weight: 600; color: var(--teal-deep); line-height: 1; }
+  .rom-chip .rom-up    { color: var(--teal); font-size: 11px; font-weight: 700; }
+  /* Move the existing capture-chip to top-center for video card */
+  .step-photo.viewfinder .capture-chip {
+    top: 22px; left: 50%; right: auto; transform: translateX(-50%);
+  }
+  .step-list { margin-top: 1.5rem; }
+  .step-list li {
+    display: flex; gap: .85rem; padding: .6rem 0;
+    font-size: 1rem; color: var(--slate);
+  }
+  .step-list li::before {
+    content: ""; flex: 0 0 22px; height: 22px; margin-top: 4px;
+    border-radius: 999px;
+    background: radial-gradient(circle at 30% 30%, var(--peach), var(--coral));
+    box-shadow: inset 0 0 0 4px #fff, 0 0 0 1px rgba(232,146,124,.4);
+  }
+  .step-num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 44px; height: 44px; border-radius: 999px;
+    background: var(--teal); color: #fff;
+    font-family: "Fraunces", serif; font-weight: 600; font-size: 1.25rem;
+    box-shadow: 0 10px 24px -10px rgba(31,158,143,.7);
+  }
+
+  /* Step 1 — recording overlay on the photo */
+  .rec-overlay {
+    position: absolute; left: 18px; bottom: 18px;
+    display: flex; align-items: center; gap: 10px;
+    background: rgba(20, 23, 23, .82);
+    color: #fff; padding: 10px 16px; border-radius: 999px;
+    font-size: 13px; font-weight: 600; letter-spacing: .04em;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 10px 30px -10px rgba(0,0,0,.45);
+  }
+  .rec-dot {
+    width: 10px; height: 10px; border-radius: 999px;
+    background: #ef4444; box-shadow: 0 0 0 4px rgba(239,68,68,.25);
+    animation: pulse 1.6s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%,100% { transform: scale(1); opacity: 1; }
+    50%     { transform: scale(.85); opacity: .55; }
+  }
+  .capture-chip {
+    position: absolute; top: 18px; right: 18px;
+    background: rgba(255,255,255,.92);
+    color: var(--slate); padding: 8px 14px; border-radius: 12px;
+    font-size: 12px; font-weight: 600; letter-spacing: .06em;
+    backdrop-filter: blur(6px);
+    box-shadow: 0 8px 20px -10px rgba(46,58,58,.4);
+    display: flex; gap: 8px; align-items: center;
+  }
+  .capture-chip span.dot { width:6px; height:6px; border-radius:999px; background:var(--teal); }
+
+  /* Step 2 — floating progress metrics card */
+  .metrics-card {
+    position: absolute; bottom: -28px; left: -28px;
+    background: #fff;
+    border: 1px solid rgba(46,58,58,.08);
+    border-radius: 22px;
+    box-shadow: 0 24px 50px -24px rgba(46,58,58,.5);
+    padding: 18px 20px;
+    width: 260px;
+  }
+  .metrics-card h4 {
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-size: 13px; letter-spacing: .08em; text-transform: uppercase;
+    color: var(--teal-deep); margin-bottom: 6px; font-weight: 700;
+  }
+  .metrics-card .score {
+    font-family: "Fraunces", serif; font-size: 2rem; font-weight: 600;
+    color: var(--slate); line-height: 1;
+  }
+  .metrics-card .delta {
+    color: var(--teal); font-size: 13px; font-weight: 600; margin-left: 6px;
+  }
+  .metrics-card svg { display: block; margin-top: 8px; }
+  .metrics-row {
+    display: flex; justify-content: space-between; gap: 8px;
+    margin-top: 10px; font-size: 12px; color: var(--slate-soft);
+  }
+  .metrics-row strong { color: var(--slate); font-weight: 600; }
+
+  /* Step 3 — phone mockup with personalized rehab plan */
+  .phone-wrap { display: flex; justify-content: center; }
+  .phone-frame {
+    width: 300px; height: 600px;
+    border-radius: 46px;
+    background: linear-gradient(180deg, #2a2f33, #1a1d20);
+    padding: 12px;
+    box-shadow:
+      0 40px 70px -30px rgba(46,58,58,.55),
+      inset 0 0 0 2px rgba(255,255,255,.05);
+    position: relative;
+  }
+  .phone-frame::before {
+    content: ""; position: absolute; top: 18px; left: 50%; transform: translateX(-50%);
+    width: 110px; height: 26px; border-radius: 999px; background: #1a1d20;
+    z-index: 2;
+  }
+  .phone-screen {
+    width: 100%; height: 100%; border-radius: 34px;
+    background: linear-gradient(180deg, #FFFDFA 0%, var(--ivory) 100%);
+    overflow: hidden; padding: 56px 18px 22px;
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  .phone-greet { font-size: 12px; color: var(--slate-soft); }
+  .phone-h { font-family: "Fraunces", serif; font-size: 20px; font-weight: 600; color: var(--slate); line-height: 1.2; }
+  .phone-progress {
+    background: #fff; border-radius: 16px; padding: 12px 14px;
+    border: 1px solid rgba(46,58,58,.06);
+    box-shadow: 0 8px 18px -14px rgba(46,58,58,.4);
+  }
+  .phone-progress .pp-label { font-size: 11px; color: var(--slate-soft); margin-bottom: 6px; display: flex; justify-content: space-between; }
+  .phone-progress .pp-bar { height: 8px; border-radius: 999px; background: rgba(31,158,143,.12); overflow: hidden; }
+  .phone-progress .pp-bar > div {
+    height: 100%; width: 62%;
+    background: linear-gradient(90deg, var(--teal), var(--coral));
+    border-radius: 999px;
+  }
+  .ex-list { display: flex; flex-direction: column; gap: 9px; margin-top: 2px; }
+  .ex-card {
+    display: flex; align-items: center; gap: 12px;
+    background: #fff; border: 1px solid rgba(46,58,58,.06);
+    border-radius: 14px; padding: 10px 12px;
+    box-shadow: 0 6px 14px -12px rgba(46,58,58,.4);
+  }
+  .ex-card .ex-icon {
+    flex: 0 0 36px; height: 36px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+  .ex-card .ex-body { flex: 1; min-width: 0; }
+  .ex-card .ex-title { font-size: 13px; font-weight: 600; color: var(--slate); line-height: 1.2; }
+  .ex-card .ex-meta { font-size: 11px; color: var(--slate-soft); margin-top: 2px; }
+  .ex-check {
+    width: 22px; height: 22px; border-radius: 999px; border: 1.5px solid rgba(46,58,58,.18);
+    display: flex; align-items: center; justify-content: center;
+    color: transparent; font-size: 12px;
+  }
+  .ex-check.done { background: var(--teal); border-color: var(--teal); color: #fff; }
+
+  /* ===== Problem cards (2x2 photo-background grid) ===== */
+  .problem-card {
+    position: relative; overflow: hidden;
+    border-radius: 26px;
+    min-height: 360px;
+    background-size: cover; background-position: center;
+    color: #fff;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding: 32px;
+    box-shadow: 0 16px 38px -22px rgba(46,58,58,.55);
+    transition: transform .25s ease, box-shadow .25s ease;
+    isolation: isolate;
+  }
+  .problem-card:hover { transform: translateY(-4px); box-shadow: 0 26px 50px -24px rgba(46,58,58,.6); }
+  .problem-card::before {
+    content: ""; position: absolute; inset: 0; z-index: 1;
+    background:
+      linear-gradient(180deg, rgba(46,58,58,0) 28%, rgba(46,58,58,.55) 62%, rgba(46,58,58,.88) 100%),
+      linear-gradient(180deg, rgba(232,146,124,.10), rgba(31,158,143,.10));
+  }
+  .problem-card > * { position: relative; z-index: 2; }
+  .problem-card .pc-tag {
+    align-self: flex-start;
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(255,255,255,.92); color: var(--teal-deep);
+    padding: 7px 13px; border-radius: 999px;
+    font-size: 11px; letter-spacing: .12em; text-transform: uppercase; font-weight: 700;
+    backdrop-filter: blur(6px);
+    margin-bottom: auto;
+  }
+  .problem-card .pc-tag::before {
+    content: ""; width: 8px; height: 8px; border-radius: 999px;
+    background: var(--coral);
+  }
+  .problem-card h3 {
+    color: #fff; font-size: 1.6rem; line-height: 1.2;
+    margin-top: 20px; margin-bottom: 10px;
+    text-shadow: 0 2px 18px rgba(0,0,0,.35);
+  }
+  .problem-card p {
+    color: rgba(255,255,255,.92); font-size: 1rem; line-height: 1.55;
+    text-shadow: 0 1px 12px rgba(0,0,0,.3);
+  }
+  @media (min-width: 768px) {
+    .problem-card { min-height: 380px; padding: 36px; }
+    .problem-card h3 { font-size: 1.75rem; }
+  }
+  .problem-card { cursor: pointer; }
+  .pc-play {
+    position: absolute; top: 22px; right: 22px; z-index: 3;
+    width: 46px; height: 46px; border-radius: 999px;
+    background: rgba(255,255,255,.94); color: var(--teal-deep);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 17px;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 12px 28px -10px rgba(0,0,0,.45);
+    transition: transform .2s ease, background .2s ease;
+  }
+  .problem-card:hover .pc-play { transform: scale(1.08); background: #fff; }
+
+  /* ===== Testimonial modal ===== */
+  .tmod {
+    position: fixed; inset: 0; z-index: 100;
+    background: rgba(20,23,23,.78);
+    backdrop-filter: blur(6px);
+    display: none;
+    align-items: center; justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    transition: opacity .25s ease;
+  }
+  .tmod.open { display: flex; opacity: 1; }
+  .tmod-card {
+    position: relative;
+    width: 100%; max-width: 880px;
+    background: #fff;
+    border-radius: 28px;
+    overflow: hidden;
+    box-shadow: 0 40px 80px -20px rgba(0,0,0,.55);
+    transform: translateY(20px);
+    transition: transform .35s cubic-bezier(.2,.8,.2,1);
+  }
+  .tmod.open .tmod-card { transform: none; }
+  .tmod-photo {
+    position: relative;
+    height: 380px;
+    background-size: cover; background-position: center;
+    overflow: hidden;
+  }
+  .tmod-photo::after {
+    content: ""; position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(20,23,23,0) 35%, rgba(20,23,23,.45) 70%, rgba(20,23,23,.85) 100%);
+  }
+  .tmod-photo.kenburns { animation: kenburns 16s ease-in-out infinite alternate; }
+  @keyframes kenburns {
+    0%   { transform: scale(1)    translate3d(0,0,0); }
+    100% { transform: scale(1.10) translate3d(-2%, -1%, 0); }
+  }
+  .tmod-badge {
+    position: absolute; top: 20px; left: 22px; z-index: 2;
+    background: rgba(255,255,255,.92); color: var(--slate);
+    padding: 7px 13px; border-radius: 999px;
+    font-size: 11px; letter-spacing: .12em; text-transform: uppercase; font-weight: 700;
+    backdrop-filter: blur(6px);
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .tmod-badge::before { content:""; width:8px; height:8px; border-radius:999px; background:var(--coral); }
+  .tmod-close {
+    position: absolute; top: 18px; right: 18px; z-index: 4;
+    width: 40px; height: 40px; border-radius: 999px;
+    background: rgba(255,255,255,.94); color: var(--slate);
+    display: flex; align-items: center; justify-content: center;
+    border: none; cursor: pointer; font-size: 18px; font-weight: 600;
+    box-shadow: 0 10px 24px -10px rgba(0,0,0,.4);
+    transition: transform .2s ease;
+  }
+  .tmod-close:hover { transform: scale(1.08); }
+  .tmod-caption {
+    position: absolute; left: 28px; right: 28px; bottom: 24px; z-index: 3;
+    color: #fff;
+    font-family: "Fraunces", serif;
+    font-size: 22px; line-height: 1.35;
+    font-weight: 500;
+    text-shadow: 0 2px 14px rgba(0,0,0,.45);
+    min-height: 60px;
+  }
+  .tmod-body {
+    padding: 24px 28px 26px;
+    background: var(--ivory);
+    border-top: 1px solid rgba(46,58,58,.08);
+  }
+  .tmod-meta {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 16px; flex-wrap: wrap;
+  }
+  .tmod-name { font-family: "Fraunces", serif; font-weight: 600; font-size: 18px; color: var(--slate); }
+  .tmod-sub  { font-size: 13px; color: var(--slate-soft); }
+  .tmod-disclaimer {
+    font-size: 11px; color: var(--slate-soft);
+    line-height: 1.5;
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px dashed rgba(46,58,58,.18);
+  }
+  .tmod-controls {
+    display: flex; gap: 10px;
+  }
+  .tmod-btn {
+    background: var(--teal); color:#fff; border: none;
+    padding: 10px 18px; border-radius: 999px;
+    font-size: 14px; font-weight: 600; cursor: pointer;
+    transition: background .2s ease, transform .2s ease;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .tmod-btn:hover { background: var(--teal-deep); transform: translateY(-1px); }
+  .tmod-btn.ghost {
+    background: transparent; color: var(--slate);
+    border: 1.5px solid rgba(46,58,58,.18);
+  }
+  .tmod-btn.ghost:hover { background: rgba(31,158,143,.06); border-color: var(--teal); color: var(--teal-deep); }
+  @media (max-width: 640px) {
+    .tmod-photo { height: 280px; }
+    .tmod-caption { font-size: 17px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .tmod-photo.kenburns { animation: none; }
+    .tmod, .tmod-card { transition: none; }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .breathe { animation: none; }
     .reveal { opacity: 1; transform: none; transition: none; }
+    .rec-dot { animation: none; }
     html { scroll-behavior: auto; }
   }
 </style>
@@ -91,7 +457,10 @@
       <a href="#support" class="hover:text-[color:var(--teal-deep)] transition-colors">Support</a>
       <a href="#clinicians" class="hover:text-[color:var(--teal-deep)] transition-colors">For clinicians</a>
     </div>
-    <a href="#begin" class="btn-primary px-5 py-2.5 text-base font-semibold">Begin your journey</a>
+    <div class="flex items-center gap-3">
+      <a href="login.html" class="btn-ghost px-5 py-2.5 text-base font-medium hidden sm:inline-flex">Log in</a>
+      <a href="join.html" class="btn-primary px-5 py-2.5 text-base font-semibold">Begin your journey</a>
+    </div>
   </nav>
 </header>
 
@@ -112,7 +481,7 @@
         see, and a plan made just for you, to follow at home, together.
       </p>
       <div class="flex flex-col sm:flex-row gap-4">
-        <a href="#begin" class="btn-primary px-7 py-4 text-base font-semibold text-center">Begin your recovery journey</a>
+        <a href="join.html" class="btn-primary px-7 py-4 text-base font-semibold text-center">Begin your recovery journey</a>
         <a href="#how" class="btn-ghost px-7 py-4 text-base font-medium text-center">See how it works</a>
       </div>
       <div class="flex flex-wrap gap-3 mt-10">
@@ -122,8 +491,7 @@
       </div>
     </div>
     <div class="reveal">
-      <!-- REPLACE: warm photo of an older stroke survivor walking, supported by a family member's hand on their arm; soft morning light. -->
-      <img src="https://images.pexels.com/photos/4173081/pexels-photo-4173081.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="An older woman out walking in the sunshine, holding hands with her daughter and grandson" loading="lazy" decoding="async" style="width:100%;height:440px;object-fit:cover;border-radius:24px;box-shadow:0 18px 44px -24px rgba(46,58,58,.55);" />
+      <img src="https://images.pexels.com/photos/6148876/pexels-photo-6148876.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="A smiling older man embracing his adult son and daughter outdoors, surrounded by family" loading="lazy" decoding="async" style="width:100%;height:440px;object-fit:cover;border-radius:24px;box-shadow:0 18px 44px -24px rgba(46,58,58,.55);" />
     </div>
   </div>
 </section>
@@ -135,37 +503,159 @@
       <h2 class="text-3xl sm:text-4xl lg:text-5xl font-semibold leading-tight mb-5">Recovery is hard — you shouldn't have to face it in the dark.</h2>
       <p class="text-lg" style="color:var(--slate-soft);">After a stroke, families tell us the hardest part isn't only the physical work. It's the not knowing. We built AxonAI to take that uncertainty away, so every bit of progress is visible, encouraging, and shared.</p>
     </div>
-    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-      <div class="card reveal p-7"><div class="text-2xl mb-4">&#127787;&#65039;</div><h3 class="text-xl font-semibold mb-2">"Am I actually getting better?"</h3><p class="text-base" style="color:var(--slate-soft);">Tiny daily gains are almost impossible to feel. Without something to measure them, hope can quietly fade.</p></div>
-      <div class="card reveal p-7"><div class="text-2xl mb-4">&#128715;</div><h3 class="text-xl font-semibold mb-2">Losing motivation at home</h3><p class="text-base" style="color:var(--slate-soft);">Once the clinic visits stop, it's easy to feel adrift — unsure what to do, or whether it's even working.</p></div>
-      <div class="card reveal p-7"><div class="text-2xl mb-4">&#128290;</div><h3 class="text-xl font-semibold mb-2">Feeling like just a number</h3><p class="text-base" style="color:var(--slate-soft);">Every recovery is personal. A plan that ignores who you are rarely fits the life you want back.</p></div>
-      <div class="card reveal p-7"><div class="text-2xl mb-4">&#128559;</div><h3 class="text-xl font-semibold mb-2">"Are we doing this right?"</h3><p class="text-base" style="color:var(--slate-soft);">Families worry about doing too much, too little, or the wrong thing entirely — with no one to reassure them.</p></div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 lg:gap-6">
+      <div class="problem-card reveal" data-tmod="getting-better" tabindex="0" role="button" aria-label="Listen to Henry's story about doubting his progress" style="background-image: url('https://images.pexels.com/photos/8088897/pexels-photo-8088897.jpeg?auto=compress&cs=tinysrgb&w=900');">
+        <div class="pc-play" aria-hidden="true">&#9654;</div>
+        <h3>"Am I actually getting better?"</h3>
+        <p>Tiny daily gains are almost impossible to feel. Without something to measure them, hope can quietly fade.</p>
+      </div>
+      <div class="problem-card reveal" data-tmod="losing-motivation" tabindex="0" role="button" aria-label="Listen to Margaret's story about losing motivation at home" style="background-image: url('https://images.pexels.com/photos/17044848/pexels-photo-17044848.jpeg?auto=compress&cs=tinysrgb&w=900');">
+        <div class="pc-play" aria-hidden="true">&#9654;</div>
+        <h3>Losing motivation at home</h3>
+        <p>Once the clinic visits stop, it's easy to feel adrift — unsure what to do, or whether it's even working.</p>
+      </div>
     </div>
   </div>
 </section>
 
 <section id="how" class="py-20 lg:py-28">
   <div class="max-w-6xl mx-auto px-5 sm:px-8">
-    <div class="reveal max-w-3xl mb-16">
+    <div class="reveal max-w-3xl mb-20">
       <p class="label mb-4">How it works</p>
       <h2 class="text-3xl sm:text-4xl lg:text-5xl font-semibold leading-tight mb-5">How AxonAI <span class="gradient-text">walks beside you</span></h2>
       <p class="text-lg" style="color:var(--slate-soft);">No clinic. No complicated equipment. Just your phone, a few minutes, and clear, gentle guidance — every step of the way.</p>
     </div>
-    <div class="grid lg:grid-cols-3 gap-7">
-      <div class="reveal">
-        <img src="https://images.pexels.com/photos/36706838/pexels-photo-36706838.jpeg?auto=compress&cs=tinysrgb&w=800" alt="A daughter gently holding her elderly mother's hand in support at home" loading="lazy" decoding="async" style="width:100%;height:240px;object-fit:cover;border-radius:24px;box-shadow:0 18px 44px -24px rgba(46,58,58,.55);" />
-        <p class="label mb-2">Step 1</p><h3 class="text-2xl font-semibold mb-3">Record a few simple movements</h3>
-        <p class="text-base" style="color:var(--slate-soft);">Stand, walk a few steps, or raise an arm — at home, in your own time. Your phone camera is all you need.</p>
+
+    <!-- Step 1 — Family records movement -->
+    <div class="reveal grid lg:grid-cols-2 gap-10 lg:gap-16 items-center mb-24 lg:mb-32">
+      <div class="step-photo viewfinder">
+        <img src="https://images.pexels.com/photos/8899507/pexels-photo-8899507.jpeg?auto=compress&cs=tinysrgb&w=1400"
+             alt="An older patient seated at home, slowly raising his arm forward in a gentle rehabilitation exercise"
+             loading="lazy" decoding="async" />
+        <div class="vf-corner tl"></div>
+        <div class="vf-corner tr"></div>
+        <div class="vf-corner bl"></div>
+        <div class="vf-corner br"></div>
+        <div class="vf-scan"></div>
+        <div class="capture-chip"><span class="dot"></span>AxonAI &middot; Tracking</div>
+        <div class="rec-overlay"><span class="rec-dot"></span>REC &middot; Session 12 &middot; 0:34</div>
+        <div class="rom-chip">
+          <div>
+            <span class="rom-label">Right shoulder</span>
+            <span class="rom-val">142&deg;</span>
+          </div>
+          <span class="rom-up">&uarr; 6&deg;</span>
+        </div>
       </div>
-      <div class="reveal">
-        <img src="https://images.pexels.com/photos/4173158/pexels-photo-4173158.jpeg?auto=compress&cs=tinysrgb&w=800" alt="A parent and adult child walking together toward warm evening light" loading="lazy" decoding="async" style="width:100%;height:240px;object-fit:cover;border-radius:24px;box-shadow:0 18px 44px -24px rgba(46,58,58,.55);" />
-        <p class="label mb-2">Step 2</p><h3 class="text-2xl font-semibold mb-3">See your progress, clearly</h3>
-        <p class="text-base" style="color:var(--slate-soft);">AxonAI measures movement you can't see by eye and shows it as gentle, encouraging progress — week by week.</p>
+      <div>
+        <div class="flex items-center gap-4 mb-5">
+          <span class="step-num">1</span>
+          <p class="label" style="margin:0;">Capture together</p>
+        </div>
+        <h3 class="text-3xl sm:text-4xl font-semibold leading-tight mb-4">A family member films a few simple movements on a phone.</h3>
+        <p class="text-lg" style="color:var(--slate-soft);">No clinic visit, no wearables. Just a quiet moment at home — a few seconds of standing, walking, or reaching — captured on the phone you already have. We guide each shot, so you know exactly what to film and when.</p>
+        <ul class="step-list">
+          <li>Step-by-step on-screen prompts — anyone in the family can do it</li>
+          <li>Just 3–5 minutes, two or three times a week</li>
+          <li>Private by default &middot; videos are encrypted and never shared without consent</li>
+          <li>Works on any modern phone — no extra equipment needed</li>
+        </ul>
       </div>
-      <div class="reveal">
-        <img src="https://images.pexels.com/photos/29372709/pexels-photo-29372709.jpeg?auto=compress&cs=tinysrgb&w=800" alt="A carer and an older woman sharing a warm moment together in a homely kitchen" loading="lazy" decoding="async" style="width:100%;height:240px;object-fit:cover;border-radius:24px;box-shadow:0 18px 44px -24px rgba(46,58,58,.55);" />
-        <p class="label mb-2">Step 3</p><h3 class="text-2xl font-semibold mb-3">Follow a plan made for you</h3>
-        <p class="text-base" style="color:var(--slate-soft);">Your exercises adapt as you improve, and your care team stays in the loop — so you're never doing this alone.</p>
+    </div>
+
+    <!-- Step 2 — See progress -->
+    <div class="reveal grid lg:grid-cols-2 gap-10 lg:gap-16 items-center mb-24 lg:mb-32">
+      <div class="order-2 lg:order-1">
+        <div class="flex items-center gap-4 mb-5">
+          <span class="step-num">2</span>
+          <p class="label" style="margin:0;">See the wins</p>
+        </div>
+        <h3 class="text-3xl sm:text-4xl font-semibold leading-tight mb-4">Clear, encouraging metrics — and a reason to smile.</h3>
+        <p class="text-lg" style="color:var(--slate-soft);">AxonAI quietly measures gait speed, balance, range of motion and symmetry — the kinds of changes you can't easily feel day-to-day — and turns them into gentle progress lines you can see. Week by week, the numbers tell a story worth celebrating.</p>
+        <ul class="step-list">
+          <li>Mobility, balance and strength scores updated every session</li>
+          <li>Week-over-week trends in plain language — no medical jargon</li>
+          <li>Milestones marked and celebrated as soon as you reach them</li>
+          <li>Share progress with family or your care team in one tap</li>
+        </ul>
+      </div>
+      <div class="step-photo order-1 lg:order-2">
+        <img src="https://images.pexels.com/photos/7983622/pexels-photo-7983622.jpeg?auto=compress&cs=tinysrgb&w=1000" alt="A smiling older man, happy and proud of his recovery progress" loading="lazy" decoding="async" />
+        <div class="metrics-card">
+          <h4>Mobility score</h4>
+          <div><span class="score">78</span><span class="delta">&uarr; +14 this week</span></div>
+          <!-- Mini trend chart -->
+          <svg viewBox="0 0 220 56" width="100%" height="56" aria-hidden="true">
+            <defs>
+              <linearGradient id="trendFill" x1="0" x2="0" y1="0" y2="1">
+                <stop offset="0%" stop-color="#1F9E8F" stop-opacity=".35"/>
+                <stop offset="100%" stop-color="#1F9E8F" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            <path d="M0,46 L30,42 L60,38 L90,32 L120,28 L150,22 L180,16 L220,8 L220,56 L0,56 Z" fill="url(#trendFill)"/>
+            <path d="M0,46 L30,42 L60,38 L90,32 L120,28 L150,22 L180,16 L220,8" stroke="#1F9E8F" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="220" cy="8" r="4" fill="#E8927C" stroke="#fff" stroke-width="2"/>
+          </svg>
+          <div class="metrics-row"><span>Balance <strong>+8%</strong></span><span>Gait <strong>+12%</strong></span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 3 — Personalized rehab plan -->
+    <div class="reveal grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+      <div class="phone-wrap">
+        <div class="phone-frame" role="img" aria-label="Phone screen showing a personalised daily rehab plan with three exercises">
+          <div class="phone-screen">
+            <div>
+              <div class="phone-greet">Good morning, Margaret &middot; Week 6</div>
+              <div class="phone-h">Today's gentle plan</div>
+            </div>
+            <div class="phone-progress">
+              <div class="pp-label"><span>Daily progress</span><span>2 of 3</span></div>
+              <div class="pp-bar"><div></div></div>
+            </div>
+            <div class="ex-list">
+              <div class="ex-card">
+                <div class="ex-icon" style="background:rgba(31,158,143,.12);color:var(--teal-deep);">&#129488;</div>
+                <div class="ex-body">
+                  <div class="ex-title">Standing balance</div>
+                  <div class="ex-meta">2 sets &middot; 90 sec &middot; easier today</div>
+                </div>
+                <div class="ex-check done">&#10003;</div>
+              </div>
+              <div class="ex-card">
+                <div class="ex-icon" style="background:rgba(246,201,168,.45);color:#B45842;">&#129348;</div>
+                <div class="ex-body">
+                  <div class="ex-title">Seated arm raise</div>
+                  <div class="ex-meta">3 sets &middot; 10 reps &middot; right side focus</div>
+                </div>
+                <div class="ex-check done">&#10003;</div>
+              </div>
+              <div class="ex-card">
+                <div class="ex-icon" style="background:rgba(31,158,143,.12);color:var(--teal-deep);">&#128694;</div>
+                <div class="ex-body">
+                  <div class="ex-title">Walking practice</div>
+                  <div class="ex-meta">5 minutes &middot; with family</div>
+                </div>
+                <div class="ex-check">&#10003;</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="flex items-center gap-4 mb-5">
+          <span class="step-num">3</span>
+          <p class="label" style="margin:0;">A plan made for you</p>
+        </div>
+        <h3 class="text-3xl sm:text-4xl font-semibold leading-tight mb-4">A personalised rehab plan that adapts as you do.</h3>
+        <p class="text-lg" style="color:var(--slate-soft);">Each day, AxonAI suggests a short, gentle set of exercises chosen for your stage of recovery. As your strength and balance improve, the plan quietly evolves with you — and your care team stays in the loop, so you're never doing this alone.</p>
+        <ul class="step-list">
+          <li>A daily plan built around the movements you're working on</li>
+          <li>Adapts gently as you improve — never too hard, never too easy</li>
+          <li>Video demonstrations and audio cues for every exercise</li>
+          <li>Stays in sync with your clinician, when one is involved</li>
+        </ul>
       </div>
     </div>
   </div>
@@ -202,7 +692,7 @@
       <h3 class="text-2xl font-semibold mb-1" style="color:#fff;">Objective, quantified assessment — without the admin</h3>
       <p class="text-base" style="color: rgba(239,234,227,.75); max-width: 40rem;">Computer-vision gait and motor-function analysis, reproducible baselines, and progress tracking that fits into your caseload. The clinical detail is here when you need it.</p>
     </div>
-    <a href="#begin" class="btn-ghost px-6 py-3 text-base font-medium text-center whitespace-nowrap" style="border-color: rgba(255,255,255,.4); color:#fff;">Explore the clinical tools &rarr;</a>
+    <a href="join.html" class="btn-ghost px-6 py-3 text-base font-medium text-center whitespace-nowrap" style="border-color: rgba(255,255,255,.4); color:#fff;">Explore the clinical tools &rarr;</a>
   </div>
 </section>
 
@@ -212,8 +702,8 @@
     <h2 class="text-3xl sm:text-4xl lg:text-5xl font-semibold leading-tight mb-5">Recovery is a journey.<br /><span class="gradient-text">Let's take it together.</span></h2>
     <p class="text-lg mb-9" style="color:var(--slate-soft);">Whether you're recovering yourself or caring for someone you love, we're here to help you see the progress and find the next step.</p>
     <div id="support" class="flex flex-col sm:flex-row gap-4 justify-center">
-      <a href="#" class="btn-primary px-8 py-4 text-base font-semibold">Begin your recovery journey</a>
-      <a href="#" class="btn-ghost px-8 py-4 text-base font-medium">Talk to us — we're here to help</a>
+      <a href="join.html" class="btn-primary px-8 py-4 text-base font-semibold">Begin your recovery journey</a>
+      <a href="join.html" class="btn-ghost px-8 py-4 text-base font-medium">Talk to us — we're here to help</a>
     </div>
     <p class="text-sm mt-6" style="color:var(--slate-soft);">No clinic visit needed to get started &middot; Free to try</p>
   </div>
@@ -236,11 +726,259 @@
   </div>
 </footer>
 
+<!-- Testimonial modal -->
+<div class="tmod" id="tmod" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="tmod-name">
+  <div class="tmod-card">
+    <div class="tmod-photo kenburns" id="tmod-photo">
+      <span class="tmod-badge">Illustrative testimony</span>
+      <button class="tmod-close" id="tmod-close" aria-label="Close testimonial">&times;</button>
+      <div class="tmod-caption" id="tmod-caption">&nbsp;</div>
+    </div>
+    <div class="tmod-body">
+      <div class="tmod-meta">
+        <div>
+          <div class="tmod-name" id="tmod-name"></div>
+          <div class="tmod-sub" id="tmod-sub"></div>
+        </div>
+        <div class="tmod-controls">
+          <button class="tmod-btn ghost" id="tmod-replay">&#8635; Replay</button>
+          <button class="tmod-btn" id="tmod-toggle">&#9612;&#9612; Pause</button>
+        </div>
+      </div>
+      <p class="tmod-disclaimer">
+        This composite story reflects real concerns shared by stroke survivors and their families. The voice is generated by your browser; the image is illustrative. No identifiable patient is depicted.
+      </p>
+    </div>
+  </div>
+</div>
+
 <script>
+  // Reveal-on-scroll
   const io = new IntersectionObserver((entries) => {
     entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } });
   }, { threshold: 0.12 });
   document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
+
+  /* ===== Testimonial modal + browser TTS ===== */
+  const TESTIMONIALS = {
+    "getting-better": {
+      name: "Henry, 72",
+      sub: "Six months post-stroke",
+      photo: "https://images.pexels.com/photos/8088897/pexels-photo-8088897.jpeg?auto=compress&cs=tinysrgb&w=1400",
+      voiceHint: "male",
+      rate: 0.92, pitch: 0.92,
+      lines: [
+        "Every day, I do the same exercises.",
+        "I stretch. I try to walk a little further.",
+        "But honestly… I can't tell if any of it is actually working.",
+        "Some days my arm feels weaker than the day before.",
+        "My wife says she sees progress, but I just don't feel it.",
+        "Without something to show me, it's hard to keep believing."
+      ]
+    },
+    "losing-motivation": {
+      name: "Margaret, 68",
+      sub: "Nine months post-stroke",
+      photo: "https://images.pexels.com/photos/17044848/pexels-photo-17044848.jpeg?auto=compress&cs=tinysrgb&w=1400",
+      voiceHint: "female",
+      rate: 0.92, pitch: 1.04,
+      lines: [
+        "After the physio sessions ended, the whole routine just… fell apart.",
+        "There's no one telling me what to do anymore.",
+        "Some mornings I look at the exercises they gave me and I think — am I even doing this right?",
+        "My daughter calls every day, but she lives so far away.",
+        "I don't want to be a burden."
+      ]
+    }
+  };
+
+  const modal      = document.getElementById('tmod');
+  const photoEl    = document.getElementById('tmod-photo');
+  const captionEl  = document.getElementById('tmod-caption');
+  const nameEl     = document.getElementById('tmod-name');
+  const subEl      = document.getElementById('tmod-sub');
+  const closeBtn   = document.getElementById('tmod-close');
+  const replayBtn  = document.getElementById('tmod-replay');
+  const toggleBtn  = document.getElementById('tmod-toggle');
+
+  const synth = window.speechSynthesis;
+  let currentKey = null;
+  let queue = [];
+  let queueIdx = 0;
+  let isPaused = false;
+  let hasSpokenOnce = false;
+  let keepAliveInt = null;
+
+  // Pre-warm the voices cache so they're ready by the time the user clicks.
+  function primeVoices() { try { if (synth) synth.getVoices(); } catch(_){} }
+  if (synth) {
+    primeVoices();
+    try { synth.addEventListener('voiceschanged', primeVoices); }
+    catch(_) { synth.onvoiceschanged = primeVoices; }
+  }
+
+  // Chrome stops speaking after ~15s; pause+resume keeps it alive.
+  function startKeepAlive() {
+    clearInterval(keepAliveInt);
+    keepAliveInt = setInterval(() => {
+      if (!synth.speaking && !synth.pending) {
+        clearInterval(keepAliveInt); keepAliveInt = null; return;
+      }
+      if (synth.speaking && !isPaused) {
+        try { synth.pause(); synth.resume(); } catch(_){}
+      }
+    }, 10000);
+  }
+
+  // Pick the best available voice for a hint (male/female), preferring English.
+  function pickVoice(hint) {
+    const voices = synth.getVoices() || [];
+    if (!voices.length) return null;
+    const en = voices.filter(v => /^en/i.test(v.lang));
+    const pool = en.length ? en : voices;
+    // Heuristic: voice name keywords for gender.
+    const maleHints   = ['daniel','alex','fred','tom','aaron','arthur','oliver','george','male'];
+    const femaleHints = ['samantha','victoria','karen','susan','tessa','moira','fiona','allison','ava','serena','female'];
+    const list = hint === 'male' ? maleHints : femaleHints;
+    const match = pool.find(v => list.some(k => v.name.toLowerCase().includes(k)));
+    return match || pool[0];
+  }
+
+  // Some browsers load voices asynchronously.
+  function whenVoicesReady(cb) {
+    const ready = (synth.getVoices() || []).length > 0;
+    if (ready) return cb();
+    const onv = () => { synth.removeEventListener('voiceschanged', onv); cb(); };
+    synth.addEventListener('voiceschanged', onv);
+    // Fallback timer in case the event never fires.
+    setTimeout(() => { try { cb(); } catch(_){} }, 600);
+  }
+
+  let startWatchdog = null;
+
+  function speakQueue(t) {
+    if (!('speechSynthesis' in window) || !synth) {
+      captionEl.textContent = "Your browser doesn't support voiced testimony.";
+      console.warn('[tts] speechSynthesis not available');
+      return;
+    }
+    const voices = synth.getVoices() || [];
+    console.log('[tts] voices available:', voices.length, voices.map(v => v.name + '/' + v.lang));
+    if (!voices.length) {
+      captionEl.textContent = "No voices installed in this browser. On Chrome, try a different OS profile; on Firefox/Linux, install eSpeak or Festival.";
+      return;
+    }
+
+    // Only cancel after first speak — first cancel in Chrome can swallow the next speak.
+    if (hasSpokenOnce) {
+      try { synth.cancel(); } catch(_){}
+    }
+    hasSpokenOnce = true;
+
+    queue = t.lines.map((line, i) => {
+      const u = new SpeechSynthesisUtterance(line);
+      u.rate   = t.rate;
+      u.pitch  = t.pitch;
+      u.volume = 1;
+      const v = pickVoice(t.voiceHint);
+      if (v) { u.voice = v; u.lang = v.lang; } else { u.lang = 'en-US'; }
+      u.onstart = () => {
+        console.log('[tts] start:', line);
+        if (startWatchdog) { clearTimeout(startWatchdog); startWatchdog = null; }
+        captionEl.textContent = line;
+      };
+      u.onerror = (e) => {
+        console.warn('[tts] error', e && e.error, line);
+        captionEl.textContent = "Voice playback failed (" + (e && e.error ? e.error : "unknown") + "). Check system audio and try a different browser.";
+      };
+      u.onend = () => {
+        console.log('[tts] end:', line);
+        queueIdx = i + 1;
+        if (queueIdx >= queue.length) {
+          toggleBtn.innerHTML = "&#9654; Play again";
+        }
+      };
+      return u;
+    });
+    queueIdx = 0;
+    isPaused = false;
+    toggleBtn.innerHTML = "&#9612;&#9612; Pause";
+    captionEl.textContent = "…";
+
+    // Queue all utterances synchronously inside the user gesture.
+    queue.forEach(u => synth.speak(u));
+    startKeepAlive();
+
+    // Watchdog: if first onstart hasn't fired in 2.5s, show a clear hint.
+    if (startWatchdog) clearTimeout(startWatchdog);
+    startWatchdog = setTimeout(() => {
+      if (!synth.speaking) {
+        captionEl.textContent = "Your browser silently dropped the audio. Common fixes: turn system audio on, unmute the browser tab (right-click the tab), or open this page in Chrome / Edge / Safari.";
+        console.warn('[tts] watchdog: speechSynthesis never started speaking');
+      }
+    }, 2500);
+  }
+
+  function openModal(key) {
+    const t = TESTIMONIALS[key];
+    if (!t) return;
+    currentKey = key;
+    photoEl.style.backgroundImage = `url('${t.photo}')`;
+    nameEl.textContent  = t.name;
+    subEl.textContent   = t.sub;
+    captionEl.textContent = " ";
+    modal.classList.add('open');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    // Speak synchronously inside the click handler — iOS/Safari requires it,
+    // and async wrappers break the user-gesture chain.
+    speakQueue(t);
+  }
+
+  function closeModal() {
+    synth.cancel();
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    currentKey = null;
+    isPaused = false;
+  }
+
+  // Card click / keyboard activation
+  document.querySelectorAll('.problem-card[data-tmod]').forEach(card => {
+    card.addEventListener('click', () => openModal(card.dataset.tmod));
+    card.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openModal(card.dataset.tmod); }
+    });
+  });
+
+  closeBtn.addEventListener('click', closeModal);
+  modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modal.classList.contains('open')) closeModal(); });
+
+  replayBtn.addEventListener('click', () => {
+    if (!currentKey) return;
+    speakQueue(TESTIMONIALS[currentKey]);
+  });
+
+  toggleBtn.addEventListener('click', () => {
+    if (!currentKey) return;
+    if (queueIdx >= queue.length) {
+      // Finished — replay
+      speakQueue(TESTIMONIALS[currentKey]);
+      return;
+    }
+    if (isPaused) {
+      synth.resume(); isPaused = false;
+      toggleBtn.innerHTML = "&#9612;&#9612; Pause";
+    } else if (synth.speaking) {
+      synth.pause(); isPaused = true;
+      toggleBtn.innerHTML = "&#9654; Resume";
+    }
+  });
+
+  // Stop speech if user navigates away.
+  window.addEventListener('beforeunload', () => synth.cancel());
 </script>
 
 </body>

@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Join the AxonAI trial program</title>
+<meta name="description" content="Sign up for the AxonAI trial program — gentle, at-home stroke recovery tracking, made for you and your family." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+  :root {
+    --ivory: #FBF7F2; --cream: #F4EBDF; --peach: #F6C9A8; --coral: #E8927C;
+    --teal: #1F9E8F; --teal-deep: #14776B; --slate: #2E3A3A; --slate-soft: #5C6A6A;
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--ivory); color: var(--slate);
+    font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+    font-size: 18px; line-height: 1.7; -webkit-font-smoothing: antialiased;
+    min-height: 100vh; display: flex; flex-direction: column;
+  }
+  h1, h2, h3 { font-family: "Fraunces", Georgia, serif; letter-spacing: -0.01em; }
+  .dawn {
+    background:
+      radial-gradient(120% 90% at 15% 0%, rgba(246,201,168,0.55) 0%, rgba(246,201,168,0) 55%),
+      radial-gradient(110% 90% at 100% 10%, rgba(31,158,143,0.18) 0%, rgba(31,158,143,0) 50%),
+      linear-gradient(180deg, #FFFDFA 0%, var(--ivory) 60%, var(--cream) 100%);
+  }
+  @keyframes breathe {
+    0%, 100% { transform: translate3d(0,0,0) scale(1); opacity: .9; }
+    50%      { transform: translate3d(0,-1.5%,0) scale(1.04); opacity: 1; }
+  }
+  .breathe { animation: breathe 14s ease-in-out infinite; }
+  .gradient-text {
+    background: linear-gradient(120deg, var(--coral) 0%, var(--teal) 90%);
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .btn-primary {
+    background: var(--teal); color: #fff; border-radius: 9999px;
+    box-shadow: 0 10px 24px -10px rgba(31,158,143,.6);
+    transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
+    cursor: pointer; border: none;
+  }
+  .btn-primary:hover { background: var(--teal-deep); transform: translateY(-2px); box-shadow: 0 16px 30px -12px rgba(31,158,143,.7); }
+  .btn-primary:disabled { opacity: .65; cursor: not-allowed; transform: none; }
+  .label { font-family: "Plus Jakarta Sans", sans-serif; letter-spacing: .12em; text-transform: uppercase; font-size: 12px; font-weight: 700; color: var(--teal-deep); }
+  .form-card {
+    background: #fff; border: 1px solid rgba(46,58,58,.08);
+    border-radius: 28px; box-shadow: 0 24px 60px -32px rgba(46,58,58,.5);
+  }
+  .field-label {
+    font-size: 14px; font-weight: 600; color: var(--slate);
+    display: block; margin-bottom: 8px;
+  }
+  .field-input {
+    width: 100%; padding: 14px 18px; font-size: 17px;
+    font-family: "Plus Jakarta Sans", sans-serif; color: var(--slate);
+    background: var(--ivory); border: 1.5px solid rgba(46,58,58,.12);
+    border-radius: 14px; transition: border-color .2s ease, background .2s ease, box-shadow .2s ease;
+  }
+  .field-input:focus {
+    outline: none; border-color: var(--teal); background: #fff;
+    box-shadow: 0 0 0 4px rgba(31,158,143,.12);
+  }
+  .field-input::placeholder { color: rgba(92,106,106,.55); }
+  .alert {
+    border-radius: 14px; padding: 14px 18px; font-size: 15px;
+    display: flex; align-items: flex-start; gap: 10px;
+  }
+  .alert-success { background: rgba(31,158,143,.08); color: var(--teal-deep); border: 1px solid rgba(31,158,143,.25); }
+  .alert-error   { background: rgba(232,146,124,.10); color: #B45842; border: 1px solid rgba(232,146,124,.35); }
+  @media (prefers-reduced-motion: reduce) {
+    .breathe { animation: none; }
+    html { scroll-behavior: auto; }
+  }
+</style>
+</head>
+<body class="dawn">
+
+<header class="backdrop-blur-md" style="background: rgba(251,247,242,.8); border-bottom: 1px solid rgba(46,58,58,.06);">
+  <nav class="max-w-6xl mx-auto px-5 sm:px-8 h-[72px] flex items-center justify-between">
+    <a href="index.html" class="flex items-center gap-2.5">
+      <span class="inline-flex h-9 w-9 items-center justify-center rounded-full" style="background: var(--teal); color:#fff; font-family:Fraunces,serif; font-weight:600;">A</span>
+      <span class="text-xl font-semibold" style="font-family:Fraunces,serif;">AxonAI</span>
+    </a>
+    <a href="index.html" class="text-base" style="color: var(--slate-soft);">&larr; Back home</a>
+  </nav>
+</header>
+
+<main class="relative flex-1 overflow-hidden">
+  <div class="breathe pointer-events-none absolute -top-32 -left-24 h-[420px] w-[420px] rounded-full" style="background: radial-gradient(circle, rgba(232,146,124,.30), transparent 70%);"></div>
+  <div class="breathe pointer-events-none absolute top-20 -right-10 h-[360px] w-[360px] rounded-full" style="background: radial-gradient(circle, rgba(31,158,143,.20), transparent 70%); animation-delay:-5s;"></div>
+
+  <div class="relative max-w-5xl mx-auto px-5 sm:px-8 py-14 lg:py-20 grid lg:grid-cols-[1.05fr_1fr] gap-12 items-center">
+
+    <div>
+      <p class="label mb-4">Trial program</p>
+      <h1 class="text-3xl sm:text-4xl lg:text-5xl font-semibold leading-[1.1] mb-5">
+        Welcome — <span class="gradient-text">we're glad you're here.</span>
+      </h1>
+      <p class="text-lg mb-8" style="color: var(--slate-soft); max-width: 32rem;">
+        Tell us a little about yourself and we'll be in touch with the next step. The trial is free, gentle, and built around you.
+      </p>
+      <ul class="space-y-3 text-base" style="color: var(--slate);">
+        <li class="flex items-start gap-3"><span style="color: var(--teal);" class="text-xl leading-none">&#10003;</span><span>No clinic visit needed to get started</span></li>
+        <li class="flex items-start gap-3"><span style="color: var(--teal);" class="text-xl leading-none">&#10003;</span><span>We'll only use your details to invite you to the trial</span></li>
+        <li class="flex items-start gap-3"><span style="color: var(--teal);" class="text-xl leading-none">&#10003;</span><span>You can ask us to remove your information at any time</span></li>
+      </ul>
+    </div>
+
+    <div class="form-card p-8 sm:p-10">
+      <form id="trial-form" action="https://formspree.io/f/xeebozyg" method="POST" novalidate>
+        <div class="mb-5">
+          <label for="name" class="field-label">Your name</label>
+          <input id="name" name="name" type="text" class="field-input" placeholder="e.g. Sarah Bennett" required autocomplete="name" />
+        </div>
+        <div class="mb-6">
+          <label for="email" class="field-label">Email address</label>
+          <input id="email" name="email" type="email" class="field-input" placeholder="you@example.com" required autocomplete="email" />
+        </div>
+
+        <!-- Optional anti-spam honeypot (Formspree will ignore submissions that fill it). -->
+        <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off" />
+
+        <button id="submit-btn" type="submit" class="btn-primary px-7 py-4 text-base font-semibold w-full">
+          Join the trial program
+        </button>
+
+        <p class="text-xs mt-4" style="color: var(--slate-soft);">
+          By joining, you agree we may contact you about the trial. We'll never share your details.
+        </p>
+
+        <div id="form-success" class="alert alert-success mt-6" style="display:none;">
+          <span aria-hidden="true">&#127881;</span>
+          <span>Thank you — you're on the list. We'll be in touch soon with the next step on your journey.</span>
+        </div>
+        <div id="form-error" class="alert alert-error mt-6" style="display:none;">
+          <span aria-hidden="true">&#9888;</span>
+          <span id="form-error-msg">Something went wrong. Please check your details and try again.</span>
+        </div>
+      </form>
+    </div>
+
+  </div>
+</main>
+
+<footer class="py-10" style="background: var(--ivory); border-top: 1px solid rgba(46,58,58,.08);">
+  <div class="max-w-6xl mx-auto px-5 sm:px-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+    <div class="flex items-center gap-2.5">
+      <span class="inline-flex h-8 w-8 items-center justify-center rounded-full" style="background: var(--teal); color:#fff; font-family:Fraunces,serif;">A</span>
+      <span class="text-lg font-semibold" style="font-family:Fraunces,serif;">AxonAI</span>
+    </div>
+    <p class="text-sm" style="color: var(--slate-soft);">Walking beside stroke survivors and their families. &middot; &copy; 2026 AxonAI</p>
+  </div>
+</footer>
+
+<script>
+  const form = document.getElementById('trial-form');
+  const btn  = document.getElementById('submit-btn');
+  const okEl = document.getElementById('form-success');
+  const errEl = document.getElementById('form-error');
+  const errMsg = document.getElementById('form-error-msg');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    okEl.style.display = 'none';
+    errEl.style.display = 'none';
+
+    const name  = form.name.value.trim();
+    const email = form.email.value.trim();
+    if (!name || !email) {
+      errMsg.textContent = 'Please enter both your name and a valid email address.';
+      errEl.style.display = 'flex';
+      return;
+    }
+
+    btn.disabled = true;
+    const originalLabel = btn.textContent;
+    btn.textContent = 'Sending…';
+
+    try {
+      const res = await fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { 'Accept': 'application/json' }
+      });
+
+      if (res.ok) {
+        form.reset();
+        okEl.style.display = 'flex';
+        btn.textContent = 'Submitted';
+        // Keep button disabled to prevent duplicate submissions.
+      } else {
+        let msg = 'Something went wrong. Please try again.';
+        try {
+          const data = await res.json();
+          if (data && data.errors && data.errors.length) {
+            msg = data.errors.map(x => x.message).join(' ');
+          }
+        } catch (_) {}
+        errMsg.textContent = msg;
+        errEl.style.display = 'flex';
+        btn.disabled = false;
+        btn.textContent = originalLabel;
+      }
+    } catch (err) {
+      errMsg.textContent = 'Could not reach the server. Please check your connection and try again.';
+      errEl.style.display = 'flex';
+      btn.disabled = false;
+      btn.textContent = originalLabel;
+    }
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,537 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>AxonAI &middot; Your dashboard</title>
+<meta name="description" content="Your AxonAI recovery dashboard — today's plan, progress, and care team." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+  :root {
+    --ivory: #FBF7F2; --cream: #F4EBDF; --peach: #F6C9A8; --coral: #E8927C;
+    --teal: #1F9E8F; --teal-deep: #14776B; --slate: #2E3A3A; --slate-soft: #5C6A6A;
+  }
+  body {
+    background: var(--ivory); color: var(--slate);
+    font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+    font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+  h1, h2, h3 { font-family: "Fraunces", Georgia, serif; letter-spacing: -0.01em; }
+  .gradient-text {
+    background: linear-gradient(120deg, var(--coral) 0%, var(--teal) 90%);
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .label { font-family: "Plus Jakarta Sans", sans-serif; letter-spacing: .12em; text-transform: uppercase; font-size: 11px; font-weight: 700; color: var(--teal-deep); }
+  .btn-primary {
+    background: var(--teal); color: #fff; border-radius: 9999px;
+    padding: 11px 20px; font-size: 14px; font-weight: 600;
+    box-shadow: 0 10px 22px -12px rgba(31,158,143,.6);
+    transition: transform .2s ease, background .2s ease;
+    border: none; cursor: pointer;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .btn-primary:hover { background: var(--teal-deep); transform: translateY(-1px); }
+  .btn-ghost {
+    border: 1.5px solid rgba(46,58,58,.18); color: var(--slate); border-radius: 9999px;
+    padding: 10px 20px; font-size: 14px; font-weight: 500;
+    background: transparent; cursor: pointer;
+    transition: border-color .2s ease, background .2s ease;
+  }
+  .btn-ghost:hover { border-color: var(--teal); background: rgba(31,158,143,.06); color: var(--teal-deep); }
+
+  /* ===== App shell ===== */
+  .shell { display: grid; grid-template-columns: 240px 1fr; min-height: 100vh; }
+  .sidebar {
+    background: #fff;
+    border-right: 1px solid rgba(46,58,58,.08);
+    padding: 24px 16px;
+    position: sticky; top: 0; height: 100vh;
+    display: flex; flex-direction: column;
+  }
+  .sb-logo { display: flex; align-items: center; gap: 10px; padding: 4px 12px 22px; }
+  .sb-logo .dot {
+    width: 32px; height: 32px; border-radius: 999px; background: var(--teal); color:#fff;
+    display: flex; align-items: center; justify-content: center;
+    font-family: "Fraunces", serif; font-weight: 600;
+  }
+  .sb-logo .name { font-family: "Fraunces", serif; font-size: 19px; font-weight: 600; }
+  .sb-nav { display: flex; flex-direction: column; gap: 4px; flex: 1; }
+  .sb-link {
+    display: flex; align-items: center; gap: 12px;
+    padding: 11px 14px; border-radius: 12px;
+    color: var(--slate-soft); font-size: 14px; font-weight: 500;
+    cursor: pointer; transition: background .15s ease, color .15s ease;
+    border: none; background: transparent; text-align: left; width: 100%;
+  }
+  .sb-link:hover { background: rgba(31,158,143,.06); color: var(--slate); }
+  .sb-link.active { background: rgba(31,158,143,.12); color: var(--teal-deep); font-weight: 600; }
+  .sb-link .ico { width: 20px; height: 20px; display: inline-flex; align-items: center; justify-content: center; font-size: 17px; }
+  .sb-user {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px; border-radius: 14px;
+    background: var(--ivory); margin-top: 16px;
+  }
+  .sb-user .avatar {
+    width: 34px; height: 34px; border-radius: 999px;
+    background: linear-gradient(135deg, var(--peach), var(--teal));
+    color: #fff; font-weight: 600; font-size: 13px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .sb-user .meta { flex: 1; min-width: 0; line-height: 1.2; }
+  .sb-user .nm { font-weight: 600; font-size: 13px; }
+  .sb-user .em { font-size: 11px; color: var(--slate-soft); }
+
+  .main { padding: 30px 36px 60px; max-width: 1100px; width: 100%; }
+  .topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; gap: 16px; flex-wrap: wrap; }
+  .topbar h1 { font-size: 32px; font-weight: 600; line-height: 1.15; }
+  .topbar .sub { font-size: 14px; color: var(--slate-soft); }
+
+  .grid-12 { display: grid; grid-template-columns: repeat(12, 1fr); gap: 18px; }
+  .col-6 { grid-column: span 6 / span 6; }
+  .col-12 { grid-column: span 12 / span 12; }
+  .col-8 { grid-column: span 8 / span 8; }
+  .col-4 { grid-column: span 4 / span 4; }
+  @media (max-width: 900px) {
+    .shell { grid-template-columns: 1fr; }
+    .sidebar { position: relative; height: auto; flex-direction: row; align-items: center; overflow-x: auto; }
+    .sb-nav { flex-direction: row; flex: 1; }
+    .sb-link { padding: 8px 12px; font-size: 13px; white-space: nowrap; }
+    .sb-user { display: none; }
+    .main { padding: 24px 20px 40px; }
+    .col-6, .col-8, .col-4 { grid-column: span 12 / span 12; }
+  }
+
+  .panel {
+    background: #fff;
+    border: 1px solid rgba(46,58,58,.07);
+    border-radius: 20px;
+    padding: 22px 22px;
+    box-shadow: 0 12px 30px -22px rgba(46,58,58,.4);
+  }
+  .panel h2 { font-size: 18px; font-weight: 600; }
+  .panel .lead { color: var(--slate-soft); font-size: 13px; margin-top: 2px; }
+
+  /* Welcome / dawn banner */
+  .welcome {
+    border-radius: 22px;
+    padding: 28px 28px 26px;
+    position: relative; overflow: hidden;
+    color: var(--slate);
+    background:
+      radial-gradient(120% 90% at 100% 0%, rgba(246,201,168,.55) 0%, rgba(246,201,168,0) 55%),
+      radial-gradient(110% 90% at 0% 10%, rgba(31,158,143,0.18) 0%, rgba(31,158,143,0) 50%),
+      linear-gradient(180deg, #FFFDFA 0%, var(--ivory) 100%);
+    border: 1px solid rgba(46,58,58,.07);
+    box-shadow: 0 12px 30px -22px rgba(46,58,58,.4);
+  }
+  .welcome h2 { font-size: 26px; font-weight: 600; line-height: 1.15; }
+  .welcome p  { color: var(--slate-soft); font-size: 14px; max-width: 38rem; margin-top: 6px; }
+  .welcome .row { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+
+  /* Stat tiles */
+  .stat {
+    background: #fff; border: 1px solid rgba(46,58,58,.07);
+    border-radius: 18px; padding: 18px 20px;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .stat .lbl { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; font-weight: 700; color: var(--teal-deep); }
+  .stat .val { font-family: "Fraunces", serif; font-size: 30px; font-weight: 600; line-height: 1; }
+  .stat .delta { font-size: 12px; color: var(--teal); font-weight: 600; }
+
+  /* Exercise list */
+  .ex-row {
+    display: flex; align-items: center; gap: 14px;
+    padding: 14px 14px;
+    border-radius: 14px;
+    border: 1px solid rgba(46,58,58,.07);
+    background: #fff;
+    margin-bottom: 10px;
+  }
+  .ex-row .ic {
+    flex: 0 0 40px; height: 40px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+  }
+  .ex-row .body { flex: 1; min-width: 0; }
+  .ex-row .ttl { font-weight: 600; font-size: 15px; }
+  .ex-row .meta { font-size: 12px; color: var(--slate-soft); }
+  .ex-row .chk {
+    width: 26px; height: 26px; border-radius: 999px;
+    border: 1.5px solid rgba(46,58,58,.18);
+    display: flex; align-items: center; justify-content: center;
+    color: transparent; font-size: 13px; cursor: pointer;
+    transition: background .15s ease, border-color .15s ease, color .15s ease;
+  }
+  .ex-row .chk.done { background: var(--teal); border-color: var(--teal); color: #fff; }
+  .ex-row .chk:hover { border-color: var(--teal); }
+
+  /* Progress bar */
+  .pbar { height: 10px; background: rgba(31,158,143,.12); border-radius: 999px; overflow: hidden; }
+  .pbar > div { height: 100%; background: linear-gradient(90deg, var(--teal), var(--coral)); border-radius: 999px; }
+
+  /* Care team avatars */
+  .care-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid rgba(46,58,58,.07); }
+  .care-row:last-child { border: none; }
+  .care-row .avatar {
+    width: 38px; height: 38px; border-radius: 999px;
+    background: linear-gradient(135deg, var(--peach), var(--teal));
+    color: #fff; font-weight: 600;
+    display: flex; align-items: center; justify-content: center; font-size: 13px;
+  }
+  .care-row .info { flex: 1; min-width: 0; }
+  .care-row .nm  { font-weight: 600; font-size: 14px; }
+  .care-row .role { font-size: 12px; color: var(--slate-soft); }
+
+  /* Tabs */
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* Capture screen */
+  .capture-pane {
+    border-radius: 20px; overflow: hidden;
+    background: #1a1d20; color: #fff;
+    position: relative;
+    aspect-ratio: 16/10;
+    display: flex; align-items: center; justify-content: center;
+    text-align: center;
+  }
+  .capture-pane .frame-corners { position: absolute; inset: 24px; pointer-events: none; }
+  .capture-pane .vfc {
+    position: absolute; width: 30px; height: 30px;
+    border: 3px solid rgba(255,255,255,.9);
+  }
+  .capture-pane .vfc.tl { top: 0; left: 0; border-right: none; border-bottom: none; border-top-left-radius: 6px; }
+  .capture-pane .vfc.tr { top: 0; right: 0; border-left: none; border-bottom: none; border-top-right-radius: 6px; }
+  .capture-pane .vfc.bl { bottom: 0; left: 0; border-right: none; border-top: none; border-bottom-left-radius: 6px; }
+  .capture-pane .vfc.br { bottom: 0; right: 0; border-left: none; border-top: none; border-bottom-right-radius: 6px; }
+  .capture-prompt { font-family: "Fraunces", serif; font-size: 24px; max-width: 30rem; padding: 0 20px; }
+  .capture-cta { margin-top: 16px; }
+  .capture-step { font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--peach); margin-bottom: 8px; }
+</style>
+</head>
+<body>
+
+<div class="shell">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <a href="index.html" class="sb-logo">
+      <span class="dot">A</span>
+      <span class="name">AxonAI</span>
+    </a>
+    <nav class="sb-nav" id="sb-nav">
+      <button class="sb-link active" data-tab="today"><span class="ico">&#9728;</span>Today</button>
+      <button class="sb-link" data-tab="capture"><span class="ico">&#127909;</span>Capture</button>
+      <button class="sb-link" data-tab="progress"><span class="ico">&#128200;</span>Progress</button>
+      <button class="sb-link" data-tab="plan"><span class="ico">&#128197;</span>Plan</button>
+      <button class="sb-link" data-tab="care"><span class="ico">&#128155;</span>Care team</button>
+    </nav>
+    <div class="sb-user">
+      <div class="avatar" id="user-avatar">M</div>
+      <div class="meta">
+        <div class="nm" id="user-name">Margaret</div>
+        <div class="em" id="user-email">you@example.com</div>
+      </div>
+      <a href="login.html" title="Log out" style="color:var(--slate-soft); font-size:14px;">&#8629;</a>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="main">
+
+    <!-- ===== Today ===== -->
+    <section class="tab-panel active" id="tab-today">
+      <div class="topbar">
+        <div>
+          <p class="label" style="margin-bottom:4px;">Week 6 &middot; Tuesday</p>
+          <h1>Good morning, <span class="gradient-text" id="hi-name">Margaret</span></h1>
+          <p class="sub">A gentle plan, made for today.</p>
+        </div>
+        <button class="btn-primary" data-go="capture">&#9654; Start today's session</button>
+      </div>
+
+      <div class="welcome mb-5">
+        <p class="label">Today's progress</p>
+        <h2 style="margin-top:6px;">2 of 3 movements done — lovely work.</h2>
+        <p>One short walking practice with your family is all that's left. There's no rush.</p>
+        <div style="margin-top:18px; max-width:520px;">
+          <div class="pbar"><div style="width:66%;"></div></div>
+        </div>
+        <div class="row">
+          <button class="btn-primary" data-go="capture">Finish today's plan</button>
+          <button class="btn-ghost" data-go="progress">See progress</button>
+        </div>
+      </div>
+
+      <div class="grid-12">
+        <div class="col-4"><div class="stat"><span class="lbl">Mobility score</span><span class="val">78</span><span class="delta">&uarr; +14 this week</span></div></div>
+        <div class="col-4"><div class="stat"><span class="lbl">Balance</span><span class="val">+8%</span><span class="delta">Trending up</span></div></div>
+        <div class="col-4"><div class="stat"><span class="lbl">Sessions</span><span class="val">12</span><span class="delta">3 this week</span></div></div>
+      </div>
+
+      <div class="grid-12 mt-5">
+        <div class="col-8">
+          <div class="panel">
+            <h2>Today's plan</h2>
+            <p class="lead">Three gentle exercises, two are already done.</p>
+            <div style="margin-top:14px;">
+              <div class="ex-row">
+                <div class="ic" style="background:rgba(31,158,143,.12);color:var(--teal-deep);">&#129488;</div>
+                <div class="body"><div class="ttl">Standing balance</div><div class="meta">2 sets &middot; 90 sec each &middot; easier today than yesterday</div></div>
+                <div class="chk done" aria-label="Done">&#10003;</div>
+              </div>
+              <div class="ex-row">
+                <div class="ic" style="background:rgba(246,201,168,.45);color:#B45842;">&#129348;</div>
+                <div class="body"><div class="ttl">Seated arm raise</div><div class="meta">3 sets &middot; 10 reps &middot; right-side focus</div></div>
+                <div class="chk done" aria-label="Done">&#10003;</div>
+              </div>
+              <div class="ex-row">
+                <div class="ic" style="background:rgba(31,158,143,.12);color:var(--teal-deep);">&#128694;</div>
+                <div class="body"><div class="ttl">Walking practice</div><div class="meta">5 minutes &middot; with a family member nearby</div></div>
+                <div class="chk" aria-label="Mark done" onclick="this.classList.toggle('done'); this.innerHTML = this.classList.contains('done') ? '&#10003;' : '';">&#10003;</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-4">
+          <div class="panel">
+            <h2>Your care team</h2>
+            <p class="lead">In the loop, every step.</p>
+            <div style="margin-top:10px;">
+              <div class="care-row">
+                <div class="avatar">EW</div>
+                <div class="info"><div class="nm">Dr. Emma Walker</div><div class="role">Stroke specialist</div></div>
+              </div>
+              <div class="care-row">
+                <div class="avatar">SO</div>
+                <div class="info"><div class="nm">Sarah O'Connor</div><div class="role">Physical therapist</div></div>
+              </div>
+              <div class="care-row">
+                <div class="avatar">JD</div>
+                <div class="info"><div class="nm">James (your son)</div><div class="role">Family</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Capture ===== -->
+    <section class="tab-panel" id="tab-capture">
+      <div class="topbar">
+        <div>
+          <p class="label" style="margin-bottom:4px;">Capture</p>
+          <h1>A short, gentle <span class="gradient-text">recording.</span></h1>
+          <p class="sub">Place your phone on a steady surface. We'll guide each movement.</p>
+        </div>
+      </div>
+
+      <div class="grid-12">
+        <div class="col-8">
+          <div class="capture-pane">
+            <div class="frame-corners">
+              <div class="vfc tl"></div><div class="vfc tr"></div><div class="vfc bl"></div><div class="vfc br"></div>
+            </div>
+            <div>
+              <p class="capture-step">Step 1 of 3</p>
+              <p class="capture-prompt">When you're ready, slowly raise your right arm forward, as high as feels comfortable.</p>
+              <div class="capture-cta">
+                <button class="btn-primary" onclick="alert('Demo build — recording would start here.');">&#128308; Start recording</button>
+              </div>
+            </div>
+          </div>
+          <p class="text-sm mt-3" style="color: var(--slate-soft);">
+            Tip: a family member can help by holding the phone steady. The video is encrypted and stays on your device unless you choose to share it.
+          </p>
+        </div>
+
+        <div class="col-4">
+          <div class="panel">
+            <h2>Today's three movements</h2>
+            <ol style="margin-top:10px; padding-left:18px; color:var(--slate); font-size:14px;">
+              <li style="margin-bottom:8px;"><b>Forward arm raise</b> &middot; right side</li>
+              <li style="margin-bottom:8px;">Standing balance &middot; 30 sec</li>
+              <li>5-step walk &middot; with family</li>
+            </ol>
+            <hr style="border:none; border-top: 1px solid rgba(46,58,58,.08); margin: 14px 0;" />
+            <p class="text-xs" style="color:var(--slate-soft);">Once you finish all three, your mobility score updates automatically.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Progress ===== -->
+    <section class="tab-panel" id="tab-progress">
+      <div class="topbar">
+        <div>
+          <p class="label" style="margin-bottom:4px;">Progress</p>
+          <h1>The line is <span class="gradient-text">going up.</span></h1>
+          <p class="sub">Six weeks of small wins. They add up.</p>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>Mobility score &middot; last 6 weeks</h2>
+        <p class="lead">Higher is better. Each point is one weekly average.</p>
+        <svg viewBox="0 0 720 220" width="100%" height="220" aria-hidden="true" style="margin-top:14px;">
+          <defs>
+            <linearGradient id="gFill" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0%" stop-color="#1F9E8F" stop-opacity=".30"/>
+              <stop offset="100%" stop-color="#1F9E8F" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <g font-family="Plus Jakarta Sans" font-size="11" fill="#5C6A6A">
+            <text x="0" y="20">100</text><text x="0" y="80">80</text><text x="0" y="140">60</text><text x="0" y="200">40</text>
+          </g>
+          <g stroke="rgba(46,58,58,.08)">
+            <line x1="30" y1="16" x2="720" y2="16"/>
+            <line x1="30" y1="76" x2="720" y2="76"/>
+            <line x1="30" y1="136" x2="720" y2="136"/>
+            <line x1="30" y1="196" x2="720" y2="196"/>
+          </g>
+          <path d="M30,176 L150,160 L260,142 L380,118 L500,92 L620,68 L720,40 L720,196 L30,196 Z" fill="url(#gFill)"/>
+          <path d="M30,176 L150,160 L260,142 L380,118 L500,92 L620,68 L720,40" stroke="#1F9E8F" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          <g>
+            <circle cx="30"  cy="176" r="4" fill="#1F9E8F" stroke="#fff" stroke-width="2"/>
+            <circle cx="150" cy="160" r="4" fill="#1F9E8F" stroke="#fff" stroke-width="2"/>
+            <circle cx="260" cy="142" r="4" fill="#1F9E8F" stroke="#fff" stroke-width="2"/>
+            <circle cx="380" cy="118" r="4" fill="#1F9E8F" stroke="#fff" stroke-width="2"/>
+            <circle cx="500" cy="92"  r="4" fill="#1F9E8F" stroke="#fff" stroke-width="2"/>
+            <circle cx="620" cy="68"  r="4" fill="#1F9E8F" stroke="#fff" stroke-width="2"/>
+            <circle cx="720" cy="40"  r="5" fill="#E8927C" stroke="#fff" stroke-width="2"/>
+          </g>
+          <g font-family="Plus Jakarta Sans" font-size="11" fill="#5C6A6A">
+            <text x="22"  y="216">Wk 1</text><text x="138" y="216">Wk 2</text><text x="248" y="216">Wk 3</text>
+            <text x="368" y="216">Wk 4</text><text x="488" y="216">Wk 5</text><text x="608" y="216">Wk 6</text>
+          </g>
+        </svg>
+      </div>
+
+      <div class="grid-12 mt-5">
+        <div class="col-4"><div class="stat"><span class="lbl">Mobility</span><span class="val">78</span><span class="delta">&uarr; from 64</span></div></div>
+        <div class="col-4"><div class="stat"><span class="lbl">Gait speed</span><span class="val">+12%</span><span class="delta">vs week 1</span></div></div>
+        <div class="col-4"><div class="stat"><span class="lbl">Balance</span><span class="val">+8%</span><span class="delta">Trending up</span></div></div>
+      </div>
+
+      <div class="panel mt-5">
+        <h2>Milestones</h2>
+        <p class="lead">Small wins worth celebrating.</p>
+        <ul style="margin-top:12px; padding-left:0; list-style:none;">
+          <li style="padding:10px 0; border-bottom:1px solid rgba(46,58,58,.07);"><span style="color:var(--teal); margin-right:10px;">&#9733;</span>First 5-minute walking practice &mdash; <span style="color:var(--slate-soft); font-size:13px;">3 days ago</span></li>
+          <li style="padding:10px 0; border-bottom:1px solid rgba(46,58,58,.07);"><span style="color:var(--teal); margin-right:10px;">&#9733;</span>Mobility score crossed 70 &mdash; <span style="color:var(--slate-soft); font-size:13px;">last week</span></li>
+          <li style="padding:10px 0;"><span style="color:var(--teal); margin-right:10px;">&#9733;</span>Right arm raise: 142° range of motion &mdash; <span style="color:var(--slate-soft); font-size:13px;">today</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ===== Plan ===== -->
+    <section class="tab-panel" id="tab-plan">
+      <div class="topbar">
+        <div>
+          <p class="label" style="margin-bottom:4px;">Your plan</p>
+          <h1>This week's <span class="gradient-text">gentle plan.</span></h1>
+          <p class="sub">Adapts as you improve — never too hard, never too easy.</p>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>This week</h2>
+        <div class="grid-12 mt-3">
+          <div class="col-12">
+            <div class="ex-row"><div class="ic" style="background:rgba(31,158,143,.12);color:var(--teal-deep);">&#129488;</div><div class="body"><div class="ttl">Standing balance</div><div class="meta">Mon, Wed, Fri &middot; 2 sets of 90 sec</div></div><span class="label">Daily</span></div>
+            <div class="ex-row"><div class="ic" style="background:rgba(246,201,168,.45);color:#B45842;">&#129348;</div><div class="body"><div class="ttl">Seated arm raise</div><div class="meta">Mon, Tue, Thu &middot; 3 sets of 10 reps</div></div><span class="label">3x / week</span></div>
+            <div class="ex-row"><div class="ic" style="background:rgba(31,158,143,.12);color:var(--teal-deep);">&#128694;</div><div class="body"><div class="ttl">Walking practice</div><div class="meta">Daily &middot; 5 minutes with family</div></div><span class="label">Daily</span></div>
+            <div class="ex-row"><div class="ic" style="background:rgba(246,201,168,.45);color:#B45842;">&#129352;</div><div class="body"><div class="ttl">Gentle grip strength</div><div class="meta">Tue, Thu &middot; soft ball, 1 minute each hand</div></div><span class="label">2x / week</span></div>
+          </div>
+        </div>
+        <p class="text-xs mt-4" style="color:var(--slate-soft);">Last updated by Sarah O'Connor (PT) &middot; reviewed Monday</p>
+      </div>
+    </section>
+
+    <!-- ===== Care team ===== -->
+    <section class="tab-panel" id="tab-care">
+      <div class="topbar">
+        <div>
+          <p class="label" style="margin-bottom:4px;">Care team</p>
+          <h1>You're never <span class="gradient-text">doing this alone.</span></h1>
+          <p class="sub">Family and clinicians who can see your progress with you.</p>
+        </div>
+        <button class="btn-primary">+ Invite someone</button>
+      </div>
+
+      <div class="grid-12">
+        <div class="col-6">
+          <div class="panel">
+            <h2>Clinicians</h2>
+            <div style="margin-top:10px;">
+              <div class="care-row">
+                <div class="avatar">EW</div>
+                <div class="info"><div class="nm">Dr. Emma Walker</div><div class="role">Stroke specialist &middot; St Mary's</div></div>
+                <button class="btn-ghost">Message</button>
+              </div>
+              <div class="care-row">
+                <div class="avatar">SO</div>
+                <div class="info"><div class="nm">Sarah O'Connor</div><div class="role">Physical therapist</div></div>
+                <button class="btn-ghost">Message</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="panel">
+            <h2>Family</h2>
+            <div style="margin-top:10px;">
+              <div class="care-row">
+                <div class="avatar">JD</div>
+                <div class="info"><div class="nm">James (son)</div><div class="role">Sees daily progress</div></div>
+                <button class="btn-ghost">Message</button>
+              </div>
+              <div class="care-row">
+                <div class="avatar">AL</div>
+                <div class="info"><div class="nm">Anna (daughter)</div><div class="role">Sees weekly summary</div></div>
+                <button class="btn-ghost">Message</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+  // Hydrate user pill from sessionStorage (set on login.html)
+  try {
+    const em = sessionStorage.getItem('axonai-user-email');
+    if (em) {
+      document.getElementById('user-email').textContent = em;
+      const nameGuess = em.split('@')[0].replace(/[._-]+/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+      if (nameGuess) {
+        document.getElementById('user-name').textContent = nameGuess.split(' ')[0];
+        document.getElementById('hi-name').textContent  = nameGuess.split(' ')[0];
+        document.getElementById('user-avatar').textContent = nameGuess[0].toUpperCase();
+      }
+    }
+  } catch(_){}
+
+  // Tab nav
+  function showTab(name) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('active', p.id === 'tab-' + name));
+    document.querySelectorAll('.sb-link').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  document.querySelectorAll('.sb-link').forEach(b => b.addEventListener('click', () => showTab(b.dataset.tab)));
+  document.querySelectorAll('[data-go]').forEach(b => b.addEventListener('click', () => showTab(b.dataset.go)));
+</script>
+
+</body>
+</html>
