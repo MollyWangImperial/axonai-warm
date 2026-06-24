@@ -175,10 +175,10 @@
   .problem-item:hover { transform: translateY(-1px); box-shadow: 0 12px 24px -18px rgba(46,58,58,.4); }
   .problem-icon {
     flex: 0 0 46px; height: 46px; border-radius: 14px;
-    background: rgba(232,146,124,.22); color: #B45842;
+    background: rgba(232,146,124,.18); color: #B45842;
     display: flex; align-items: center; justify-content: center;
-    font-size: 22px;
   }
+  .problem-icon svg { width: 24px; height: 24px; display: block; }
   .problem-body { flex: 1; min-width: 0; }
   .problem-name { font-size: 15px; font-weight: 600; color: var(--slate); line-height: 1.3; }
   .problem-meta { font-size: 13px; color: var(--slate-soft); margin-top: 3px; line-height: 1.4; }
@@ -692,21 +692,38 @@
         </div>
         <div class="problem-list">
           <div class="problem-item">
-            <div class="problem-icon">&#128170;</div>
+            <div class="problem-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 20V5"/>
+                <path d="M5 12l7-7 7 7"/>
+              </svg>
+            </div>
             <div class="problem-body">
               <div class="problem-name">Lifting your arm feels harder</div>
               <div class="problem-meta">Reaching for a shelf, putting on a jacket</div>
             </div>
           </div>
           <div class="problem-item">
-            <div class="problem-icon">&#9995;</div>
+            <div class="problem-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="9"/>
+                <circle cx="12" cy="12" r="5"/>
+                <circle cx="12" cy="12" r="1.5" fill="currentColor"/>
+              </svg>
+            </div>
             <div class="problem-body">
               <div class="problem-name">Your left hand has less grip</div>
               <div class="problem-meta">Opening a jar, holding a mug steady</div>
             </div>
           </div>
           <div class="problem-item">
-            <div class="problem-icon">&#128694;</div>
+            <div class="problem-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 9h6"/>
+                <path d="M14 17h6"/>
+                <path d="M10 9l4 8"/>
+              </svg>
+            </div>
             <div class="problem-body">
               <div class="problem-name">Shorter steps on one side</div>
               <div class="problem-meta">Walking, climbing stairs, keeping balance</div>
