@@ -1,10 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 112" role="img" aria-label="RehynAI logo">
-  <rect width="448" height="112" rx="10" fill="#15514B"/>
-  <!-- Pulse / heartbeat line -->
-  <g stroke="#FFFFFF" stroke-width="9" fill="none" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M22 66 H48 L60 48 L76 78 L92 34 L104 66 H118"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 112" role="img" aria-label="RehynAI logo">
+  <!-- Icon badge: rounded teal square with white pulse line -->
+  <rect width="112" height="112" rx="26" fill="#15514B"/>
+  <g stroke="#FFFFFF" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M16 64 H38 L50 44 L64 76 L78 32 L90 62 H96"/>
   </g>
-  <circle cx="122" cy="62" r="7" fill="#FFFFFF"/>
-  <!-- Wordmark -->
-  <text x="150" y="79" font-family="'Plus Jakarta Sans','Arial Black',Arial,sans-serif" font-weight="800" font-size="58" letter-spacing="2" fill="#FFFFFF">REHYN</text>
-</svg>
+  <circle cx="98" cy="59" r="6" fill="#FFFFFF"/>
+  <!-- Wordmark: dark teal, blends with light backgrounds -->
+  <text x="132" y="78" font-family="'Plus Jakarta Sans','Arial Black',Arial,sans-serif" font-weight="800"
