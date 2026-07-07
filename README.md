@@ -1,6 +1,6 @@
-# RehynAI — Warm landing page ("Dawn of Hope")
+# Rehyn — Warm landing page ("Dawn of Hope")
 
-A redesign of the RehynAI landing page, re-targeted from clinicians to **patients and
+A redesign of the Rehyn landing page, re-targeted from clinicians to **patients and
 families** recovering from a stroke. Warm, hopeful, and emotionally reassuring — while
 keeping a quiet entry point for clinicians.
 
