@@ -510,7 +510,7 @@
 <script>
   // Hydrate user pill from sessionStorage (set on login.html)
   try {
-    const em = sessionStorage.getItem('axonai-user-email');
+    const em = sessionStorage.getItem('rehynai-user-email');
     if (em) {
       document.getElementById('user-email').textContent = em;
       const nameGuess = em.split('@')[0].replace(/[._-]+/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
