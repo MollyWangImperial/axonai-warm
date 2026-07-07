@@ -1327,4 +1327,42 @@
     isPaused = false;
   }
 
-  // Card click / keyboard
+  // Card click / keyboard activation
+  document.querySelectorAll('.problem-card[data-tmod]').forEach(card => {
+    card.addEventListener('click', () => openModal(card.dataset.tmod));
+    card.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openModal(card.dataset.tmod); }
+    });
+  });
+
+  closeBtn.addEventListener('click', closeModal);
+  modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modal.classList.contains('open')) closeModal(); });
+
+  replayBtn.addEventListener('click', () => {
+    if (!currentKey) return;
+    speakQueue(TESTIMONIALS[currentKey]);
+  });
+
+  toggleBtn.addEventListener('click', () => {
+    if (!currentKey) return;
+    if (queueIdx >= queue.length) {
+      // Finished — replay
+      speakQueue(TESTIMONIALS[currentKey]);
+      return;
+    }
+    if (isPaused) {
+      synth.resume(); isPaused = false;
+      toggleBtn.innerHTML = "&#9612;&#9612; Pause";
+    } else if (synth.speaking) {
+      synth.pause(); isPaused = true;
+      toggleBtn.innerHTML = "&#9654; Resume";
+    }
+  });
+
+  // Stop speech if user navigates away.
+  window.addEventListener('beforeunload', () => synth.cancel());
+</script>
+
+</body>
+</html>
